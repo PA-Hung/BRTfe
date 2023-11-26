@@ -7,7 +7,6 @@ import {
   setLogoutAction,
   setUserLoginInfo,
 } from "./redux/slice/authSlice";
-import { increment, decrement } from "./redux/slice/counterSlice";
 import { useNavigate } from "react-router-dom";
 
 function App() {

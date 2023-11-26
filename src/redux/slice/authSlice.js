@@ -21,8 +21,6 @@ const initialState = {
         name: "",
         role: ""
     },
-
-    activeMenu: 'home'
 }
 
 const authSlice = createSlice({

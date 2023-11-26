@@ -9,8 +9,8 @@ import {
 import LayoutAdmin from "./LayoutAdmin";
 import AdminPage from "../components/admin/admin.page";
 import UserPage from "../components/user/user.page";
-import Login from "../components/auth/Login";
-import ProtectedRoute from "./ProtectedRoute";
+import Login from "../components/auth/login";
+import ProtectedRoute from "./protectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -24,9 +24,9 @@ export const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      //<ProtectedRoute>
-      <LayoutAdmin />
-      //</ProtectedRoute>
+      <ProtectedRoute>
+        <LayoutAdmin />
+      </ProtectedRoute>
     ),
     children: [
       {

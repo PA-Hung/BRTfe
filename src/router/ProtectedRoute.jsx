@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 const ProtectedRoute = (props) => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   //const isLoading = useSelector((state) => state.auth.isLoading);
-  console.log(">>>>auth Protected>>>>>", isAuthenticated);
 
   return (
     <>

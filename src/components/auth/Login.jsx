@@ -14,8 +14,6 @@ const Login = () => {
   let location = useLocation();
   let params = new URLSearchParams(location.search);
   const callback = params?.get("callback");
-  console.log(">>>>authLogin>>>>>", isAuthenticated);
-  console.log(">>>>account>>>>>", account);
 
   useEffect(() => {
     //đã login => redirect to '/'
@@ -30,7 +28,7 @@ const Login = () => {
       dispatch(setUserLoginInfo(res.data.user));
       localStorage.setItem("access_token", res.data.access_token);
       message.success("Đăng nhập tài khoản thành công!");
-      //window.location.href = callback ? callback : "/admin";
+      window.location.href = callback ? callback : "/admin";
     } else {
       notification.error({
         message: "Đăng nhập thất bại !",

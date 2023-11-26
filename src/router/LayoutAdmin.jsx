@@ -5,36 +5,36 @@ import {
   HomeOutlined,
   UserSwitchOutlined,
   LogoutOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   CalendarOutlined,
 } from "@ant-design/icons";
-import Logo from "../components/admin/Logo.jsx";
-import ToggleThemeButton from "../components/admin/ToggleTheme.jsx";
+import Logo from "../components/admin/logo.jsx";
+import ToggleThemeButton from "../components/admin/toggleTheme.jsx";
 import { postLogOut } from "../utils/api.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogoutAction } from "../redux/slice/authSlice.js";
+import HeaderAdmin from "../components/admin/header.jsx";
+import { setActiveKey } from "../redux/slice/menuSilce.js";
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Footer, Sider, Content } = Layout;
 
-const LayoutAdmin = () => {
-  const [darkTheme, setDarkTheme] = useState(false);
+const LayoutAdmin = (props) => {
+  const [darkMode, setDarkMode] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.user);
-  //console.log(">>>>>>>isAuthenticated", isAuthenticated);
+  const activeMenu = useSelector((state) => state.menu.activeKey);
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
   const toggleTheme = () => {
-    setDarkTheme(!darkTheme);
+    setDarkMode(!darkMode);
   };
 
   const handleMenu = (e) => {
-    //console.log('e', e);
+    dispatch(setActiveKey(e.key));
   };
 
   const handleLogout = async () => {
@@ -60,7 +60,7 @@ const LayoutAdmin = () => {
       icon: <UserSwitchOutlined />,
     },
     {
-      label: <Link to={"/admin/workdays"}>Bảng đăng ký</Link>,
+      label: <Link>Bảng đăng ký</Link>,
       key: "activity",
       icon: <CalendarOutlined />,
     },
@@ -72,44 +72,27 @@ const LayoutAdmin = () => {
   ];
 
   return (
-    <Layout>
+    <Layout theme={darkMode ? "dark" : "light"} hasSider>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
-        theme={darkTheme ? "dark" : "light"}
+        theme={darkMode ? "dark" : "light"}
       >
         <Logo />
         <Menu
           onClick={handleMenu}
           style={{ height: "calc(100vh - 60px)" }}
           mode="inline"
-          theme={darkTheme ? "dark" : "light"}
+          theme={darkMode ? "dark" : "light"}
           items={items}
           defaultSelectedKeys={["home"]}
+          selectedKeys={activeMenu}
         />
-        <ToggleThemeButton darkTheme={darkTheme} toggleTheme={toggleTheme} />
+        <ToggleThemeButton darkTheme={darkMode} toggleTheme={toggleTheme} />
       </Sider>
       <Layout>
-        <Header
-          style={{
-            display: "flex",
-            height: 50,
-            backgroundColor: "white",
-            paddingLeft: 10,
-            justifyContent: "left",
-            alignItems: "center",
-            borderBottom: "1px solid #f0f0f0",
-          }}
-        >
-          <Button
-            onClick={toggleCollapsed}
-            type="text"
-            style={{ fontSize: 15 }}
-          >
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </Button>
-        </Header>
+        <HeaderAdmin toggleCollapsed={toggleCollapsed} collapsed={collapsed} />
         <Content>
           <div
             style={{ backgroundColor: "white", height: "calc(100vh - 60px)" }}
