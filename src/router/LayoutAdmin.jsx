@@ -13,7 +13,7 @@ import { postLogOut } from "../utils/api.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogoutAction } from "../redux/slice/authSlice.js";
 import HeaderAdmin from "../components/admin/header.jsx";
-import { setActiveKey } from "../redux/slice/menuSilce.js";
+import { setActiveKey, setHomeKey } from "../redux/slice/menuSilce.js";
 
 const { Footer, Sider, Content } = Layout;
 
@@ -41,6 +41,7 @@ const LayoutAdmin = (props) => {
     const res = await postLogOut();
     if (res && res.data) {
       dispatch(setLogoutAction({}));
+      dispatch(setHomeKey());
       notification.success({
         message: "Đăng xuất thành công !",
       });

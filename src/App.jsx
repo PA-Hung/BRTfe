@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 
 function App() {
   const account = useSelector((state) => state.auth.user);
-  const count = useSelector((state) => state.counter.value);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,7 +43,6 @@ function App() {
         >
           Increment
         </button>
-        <button>{count}</button>
         <button
           aria-label="Decrement value"
           onClick={() => dispatch(setLogoutAction())}

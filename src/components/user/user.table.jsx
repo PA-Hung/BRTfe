@@ -48,7 +48,6 @@ const UserTable = () => {
 
   const confirmDelete = async (user) => {
     const res = await deleteUser(user._id);
-    console.log("xxxx", res);
     if (res.data) {
       await getData();
       message.success("Xoá người dùng thành công !");
@@ -126,6 +125,7 @@ const UserTable = () => {
     <div style={{ padding: 30 }}>
       <div
         style={{
+          color: "black",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",

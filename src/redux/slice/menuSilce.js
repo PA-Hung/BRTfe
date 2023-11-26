@@ -11,10 +11,13 @@ export const menuSlice = createSlice({
         setActiveKey: (state, action) => {
             state.activeKey = action.payload;
         },
+        setHomeKey: (state, action) => {
+            state.activeKey = 'home';
+        },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { setActiveKey } = menuSlice.actions
+export const { setActiveKey, setHomeKey } = menuSlice.actions
 
 export default menuSlice.reducer

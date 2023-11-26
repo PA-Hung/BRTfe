@@ -1,11 +1,23 @@
 import axios from "axios";
-
-const access_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0b2tlbiBsb2dpbiIsImlzcyI6ImZyb20gc2VydmVyIiwiX2lkIjoiNjU1YjYxZTRhYjhhMjBkNGUxZjc0NGQxIiwibmFtZSI6IkknbSBhZG1pbiB4eHgiLCJwaG9uZSI6IjA5MzM2MzQ5MzMiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3MDA3NDY1MzQsImV4cCI6MTcwMDgzMjkzNH0.JM7CkkN9YbSyhQl7s80GQsCfVeZl1t3EmiYix7Y60cg"
+import { setRefreshTokenAction } from "../redux/slice/authSlice";
+import { Mutex } from "async-mutex";
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
     withCredentials: true
 });
+
+const mutex = new Mutex();
+const NO_RETRY_HEADER = 'x-no-retry';
+
+const handleRefreshToken = async () => {
+    return await mutex.runExclusive(async () => {
+        //console.log('>>>>>>>>test chạy hàm handleRefreshToken ');
+        const res = await instance.get('/api/v1/auth/refresh');
+        if (res && res.data) return res.data.access_token;
+        else return null;
+    });
+};
 
 // Thêm một bộ đón chặn request
 instance.interceptors.request.use(function (config) {
@@ -25,16 +37,37 @@ instance.interceptors.request.use(function (config) {
 });
 
 // Thêm một bộ đón chặn response
-instance.interceptors.response.use(function (response) {
-    // Bất kì mã trạng thái nào nằm trong tầm 2xx đều khiến hàm này được trigger
-    // Làm gì đó với dữ liệu response
-    return response && response.data ? response.data : response;
-}, function (error) {
-    // Bất kì mã trạng thái nào lọt ra ngoài tầm 2xx đều khiến hàm này được trigger\
-    // Làm gì đó với lỗi response
-    console.log('error', error.response)
-    return error && error.response && error.response.data ?
-        error.response.data : Promise.reject(error);
-});
+instance.interceptors.response.use(
+    (res) => res.data,
+    async (error) => {
+        if (error.config && error.response
+            && +error.response.status === 401
+            && error.config.url !== '/api/v1/auth/login'
+            && !error.config.headers[NO_RETRY_HEADER]
+        ) {
+            const access_token = await handleRefreshToken();
+            error.config.headers[NO_RETRY_HEADER] = 'true'
+            if (access_token) {
+                error.config.headers['Authorization'] = `Bearer ${access_token}`;
+                localStorage.setItem('access_token', access_token)
+                return instance.request(error.config);
+            }
+        }
+
+        if (
+            error.config && error.response
+            && +error.response.status === 400
+            && error.config.url === '/api/v1/auth/refresh'
+            && location.pathname.startsWith("/admin")
+        ) {
+            const message = error?.response?.data?.message ?? "Có lỗi xảy ra, vui lòng login.";
+            //dispatch redux action
+            const { store } = await import("../redux/store");
+            store.dispatch(setRefreshTokenAction({ status: true, message }));
+        }
+
+        return error?.response?.data ?? Promise.reject(error);
+    }
+);
 
 export default instance
