@@ -1,5 +1,10 @@
 import axios from '../utils/axiosCustomize'
 
+// TaskList ------------------------------------------------------------------------------------------------
+const getTasklistbyUserId = (userid, current, pageSize) => {
+    return axios.get(`api/v1/users/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
+}
+
 // User ----------------------------------------------------------------------------------------------------
 
 const getUsers = (current, pageSize) => {
@@ -32,7 +37,9 @@ const postLogOut = () => {
     return axios.post('api/v1/auth/logout')
 }
 
+
 export {
+    getTasklistbyUserId,
     // ----- user
     getUsers,
     postCreateUser,
@@ -41,5 +48,6 @@ export {
     // ----- auth
     postLogin,
     getAccount,
-    postLogOut
+    postLogOut,
+
 }

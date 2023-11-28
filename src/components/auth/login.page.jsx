@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Form, Input, message, notification } from "antd";
+import { Button, Form, Input, notification } from "antd";
 import "../../styles/login.css";
 import { postLogin } from "../../utils/api";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +16,6 @@ const Login = () => {
   const callback = params?.get("callback");
 
   useEffect(() => {
-    //đã login => redirect to '/'
     if (isAuthenticated === true) {
       window.location.href = "/admin";
     }
@@ -25,9 +24,9 @@ const Login = () => {
   const onFinish = async (values) => {
     const res = await postLogin(values.username, values.password);
     if (res?.data) {
+      notification.success({ message: "Đăng nhập tài khoản thành công!" });
       dispatch(setUserLoginInfo(res.data.user));
       localStorage.setItem("access_token", res.data.access_token);
-      message.success("Đăng nhập tài khoản thành công!");
       window.location.href = callback ? callback : "/admin";
     } else {
       notification.error({

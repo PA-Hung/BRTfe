@@ -56,13 +56,13 @@ const LayoutAdmin = (props) => {
       icon: <HomeOutlined />,
     },
     {
-      label: <Link to={"/admin/users"}>Quản lý</Link>,
+      label: <Link to={"/admin/user"}>Quản lý</Link>,
       key: "user",
       icon: <UserSwitchOutlined />,
     },
     {
-      label: <Link>Bảng đăng ký</Link>,
-      key: "activity",
+      label: <Link to={"/admin/tasklist"}>Bảng đăng ký</Link>,
+      key: "tasklist",
       icon: <CalendarOutlined />,
     },
     {
