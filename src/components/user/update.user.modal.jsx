@@ -4,7 +4,6 @@ import { updateUser } from "../../utils/api";
 
 const UpdateUserModal = (props) => {
   const {
-    access_token,
     updateData,
     isUpdateModalOpen,
     setIsUpdateModalOpen,

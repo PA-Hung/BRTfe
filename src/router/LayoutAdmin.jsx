@@ -22,7 +22,7 @@ const LayoutAdmin = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.auth.user);
+  const isAdmin = useSelector((state) => state.auth.user.role);
   const activeMenu = useSelector((state) => state.menu.activeKey);
 
   const toggleCollapsed = () => {
@@ -54,23 +54,34 @@ const LayoutAdmin = (props) => {
       label: <Link to={"/admin"}>Trang chủ</Link>,
       key: "home",
       icon: <HomeOutlined />,
+      visible: true,
     },
     {
       label: <Link to={"/admin/user"}>Quản lý</Link>,
       key: "user",
       icon: <UserSwitchOutlined />,
+      visible: isAdmin === "ADMIN" ? true : false,
     },
+    // {
+    //   label: <Link to={"/admin/tasklist"}>Bảng đăng ký</Link>,
+    //   key: "tasklist",
+    //   icon: <CalendarOutlined />,
+    // },
     {
-      label: <Link to={"/admin/tasklist"}>Bảng đăng ký</Link>,
-      key: "tasklist",
+      label: <Link to={"/admin/usertasklist"}>Bảng đăng ký</Link>,
+      key: "usertasklist",
       icon: <CalendarOutlined />,
+      visible: true,
     },
     {
       label: <Link onClick={() => handleLogout()}>Đăng xuất</Link>,
       key: "logout",
       icon: <LogoutOutlined />,
+      visible: true,
     },
   ];
+
+  const filteredItems = items.filter((item) => item.visible);
 
   return (
     <Layout theme={darkMode ? "dark" : "light"} hasSider>
@@ -86,7 +97,7 @@ const LayoutAdmin = (props) => {
           style={{ height: "calc(100vh - 60px)" }}
           mode="inline"
           theme={darkMode ? "dark" : "light"}
-          items={items}
+          items={filteredItems}
           defaultSelectedKeys={["home"]}
           selectedKeys={activeMenu}
         />

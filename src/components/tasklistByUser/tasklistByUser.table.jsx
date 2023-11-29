@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { Table, Button, notification, Popconfirm, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import CreateUserModal from "./create.user.modal";
-import UpdateUserModal from "./update.user.modal";
-import { deleteUser, getUsers } from "../../utils/api";
+import { getAllTaskListByUser, deleteTaskListByUser } from "../../utils/api";
+import { useSelector } from "react-redux";
+import CreateTaskListByUserModal from "./createTasklistByUser.modal";
+import UpdateTaskListByUserModal from "./updateTasklistByUser.modal";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+dayjs.locale("vi");
 
-const UserTable = () => {
+const TaskListByUser = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [listUsers, setListUsers] = useState([]);
+  const [tasklists, setTaskLists] = useState([]);
+  const userId = useSelector((state) => state.auth.user._id);
   const [updateData, setUpdateData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState({
@@ -25,9 +30,9 @@ const UserTable = () => {
   const getData = async () => {
     setLoading(true);
 
-    const res = await getUsers(meta.current, meta.pageSize);
+    const res = await getAllTaskListByUser(userId, meta.current, meta.pageSize);
     if (res.data) {
-      setListUsers(res.data.result);
+      setTaskLists(res.data.result);
       setMeta({
         current: res.data.meta.current,
         pageSize: res.data.meta.pageSize,
@@ -44,11 +49,11 @@ const UserTable = () => {
     setLoading(false);
   };
 
-  const confirmDelete = async (user) => {
-    const res = await deleteUser(user._id);
+  const confirmDelete = async (id) => {
+    const res = await deleteTaskListByUser(id);
     if (res.data) {
       await getData();
-      message.success("Xoá người dùng thành công !");
+      message.success("Xoá dữ liệu thành công !");
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
@@ -57,24 +62,37 @@ const UserTable = () => {
     }
   };
 
-  const columns = [
+  const tasklistColumns = [
     {
-      title: "Số điện thoại",
-      dataIndex: "phone",
-      key: "phone",
+      title: "Ngày làm việc",
+      dataIndex: "date",
+      key: "date",
       render: (_value, record) => {
-        return <div>{record.phone}</div>;
+        const rawDate = dayjs(record.date).format("dddd");
+        const date = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
+        return (
+          <div style={{ display: "flex", gap: "4px" }}>
+            <div>{date}</div>
+            <div>{dayjs(record.date).format(", [ngày] DD/MM/YYYY")}</div>
+          </div>
+        );
       },
     },
     {
-      title: "Tên",
-      dataIndex: "name",
-      key: "name",
+      title: "Thời gian làm việc",
+      dataIndex: "period",
+      key: "period",
+      render: (_value, record) => {
+        return <div>{record.period}</div>;
+      },
     },
     {
-      title: "Quyền hạn",
-      dataIndex: "role",
-      key: "role",
+      title: "Ghi chú",
+      dataIndex: "note",
+      key: "note",
+      render: (_value, record) => {
+        return <div>{record.note}</div>;
+      },
     },
     {
       title: "Actions",
@@ -94,8 +112,8 @@ const UserTable = () => {
             </div>
             <div>
               <Popconfirm
-                title={`Bạn muốn xoá ${record.name} không ?`}
-                onConfirm={() => confirmDelete(record)}
+                title={`Bạn muốn xoá dữ liệu này ?`}
+                onConfirm={() => confirmDelete(record._id)}
                 okText="Yes"
                 cancelText="No"
               >
@@ -129,7 +147,7 @@ const UserTable = () => {
           justifyContent: "space-between",
         }}
       >
-        <h2>Quản lý phóng viên</h2>
+        <h2>Danh sách đăng ký</h2>
         <div>
           <Button
             icon={<PlusOutlined />}
@@ -142,8 +160,8 @@ const UserTable = () => {
       </div>
       <Table
         size="small"
-        columns={columns}
-        dataSource={listUsers}
+        columns={tasklistColumns}
+        dataSource={tasklists}
         rowKey={"_id"}
         loading={loading}
         bordered={true}
@@ -159,12 +177,12 @@ const UserTable = () => {
         }}
       />{" "}
       {/*  // dataSource phải là mảng Array [] */}
-      <CreateUserModal
+      <CreateTaskListByUserModal
         getData={getData}
         isCreateModalOpen={isCreateModalOpen}
         setIsCreateModalOpen={setIsCreateModalOpen}
       />
-      <UpdateUserModal
+      <UpdateTaskListByUserModal
         updateData={updateData}
         getData={getData}
         isUpdateModalOpen={isUpdateModalOpen}
@@ -175,4 +193,4 @@ const UserTable = () => {
   );
 };
 
-export default UserTable;
+export default TaskListByUser;

@@ -1,8 +1,29 @@
 import axios from '../utils/axiosCustomize'
 
 // TaskList ------------------------------------------------------------------------------------------------
-const getTasklistbyUserId = (userid, current, pageSize) => {
+
+const getAllUsersWithTask = (current, pageSize) => {
+    return axios.get(`api/v1/users/tasklist?current=${current}&pageSize=${pageSize}`)
+}
+
+const getAllTaskListByAdmin = (userid, current, pageSize) => {
     return axios.get(`api/v1/users/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
+}
+
+const getAllTaskListByUser = (userid, current, pageSize) => {
+    return axios.get(`api/v1/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
+}
+
+const postCreateTaskListByUser = (data) => {
+    return axios.post('api/v1/tasklist', data)
+}
+
+const deleteTaskListByUser = (id) => {
+    return axios.delete(`api/v1/tasklist/${id}`)
+}
+
+const updateTaskListByUser = (data) => {
+    return axios.patch('api/v1/tasklist', data)
 }
 
 // User ----------------------------------------------------------------------------------------------------
@@ -39,7 +60,12 @@ const postLogOut = () => {
 
 
 export {
-    getTasklistbyUserId,
+    getAllUsersWithTask,
+    getAllTaskListByAdmin,
+    getAllTaskListByUser,
+    postCreateTaskListByUser,
+    deleteTaskListByUser,
+    updateTaskListByUser,
     // ----- user
     getUsers,
     postCreateUser,

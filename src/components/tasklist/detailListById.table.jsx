@@ -1,7 +1,10 @@
 import React from "react";
 import { Table, notification } from "antd";
 import { useState, useEffect } from "react";
-import { getTasklistbyUserId } from "../../utils/api";
+import { getAllTaskListByAdmin } from "../../utils/api";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+dayjs.locale("vi");
 
 const DetailListById = (props) => {
   const { userid } = props;
@@ -10,7 +13,7 @@ const DetailListById = (props) => {
 
   const [meta, setMeta] = useState({
     current: 1,
-    pageSize: 14,
+    pageSize: 5,
     pages: 0,
     total: 0,
   });
@@ -23,7 +26,7 @@ const DetailListById = (props) => {
     setLoading(true);
     const current = meta.current;
     const pageSize = meta.pageSize;
-    const resTasklist = await getTasklistbyUserId(userid, current, pageSize);
+    const resTasklist = await getAllTaskListByAdmin(userid, current, pageSize);
     if (resTasklist.data) {
       setTaskList(resTasklist.data.result);
       setMeta({
@@ -48,7 +51,14 @@ const DetailListById = (props) => {
       dataIndex: "date",
       key: "date",
       render: (_value, record) => {
-        return <div>{record.date}</div>;
+        const rawDate = dayjs(record.date).format("dddd");
+        const date = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
+        return (
+          <div style={{ display: "flex", gap: "4px" }}>
+            <div>{date}</div>
+            <div>{dayjs(record.date).format(", [ngày] DD/MM/YYYY")}</div>
+          </div>
+        );
       },
     },
     {

@@ -6,6 +6,7 @@ import UserPage from "../components/user/user.page";
 import ProtectedRoute from "./protectedRoute";
 import Tasklist from "../components/tasklist/tasklist.page";
 import Login from "../components/auth/login.page";
+import TaskListByUser from "../components/tasklistByUser/tasklistByUser.table";
 
 export const router = createBrowserRouter([
   {
@@ -26,15 +27,19 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <AdminPage />,
+        element: <Tasklist />,
       },
       {
         path: "user",
         element: <UserPage />,
       },
+      // {
+      //   path: "tasklist",
+      //   element: <Tasklist />,
+      // },
       {
-        path: "tasklist",
-        element: <Tasklist />,
+        path: "usertasklist",
+        element: <TaskListByUser />,
       },
     ],
   },

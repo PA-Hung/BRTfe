@@ -2,8 +2,7 @@ import { Modal, Input, notification, Form, Select } from "antd";
 import { postCreateUser } from "../../utils/api";
 
 const CreateUserModal = (props) => {
-  const { access_token, getData, isCreateModalOpen, setIsCreateModalOpen } =
-    props;
+  const { getData, isCreateModalOpen, setIsCreateModalOpen } = props;
   const [form] = Form.useForm();
 
   const resetModal = () => {

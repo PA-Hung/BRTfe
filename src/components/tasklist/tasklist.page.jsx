@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table, notification } from "antd";
-import { getUsers } from "../../utils/api";
+import { getAllUsersWithTask } from "../../utils/api";
 import DetailListById from "./detailListById.table";
 
 const Tasklist = () => {
@@ -42,7 +42,7 @@ const Tasklist = () => {
   const getData = async () => {
     setLoading(true);
 
-    const res = await getUsers(meta.current, meta.pageSize);
+    const res = await getAllUsersWithTask(meta.current, meta.pageSize);
     if (res.data) {
       setListUsers(res.data.result);
       setMeta({
@@ -71,7 +71,7 @@ const Tasklist = () => {
   };
 
   return (
-    <div style={{ padding: 30 }}>
+    <div style={{ paddingLeft: 30, paddingRight: 30 }}>
       <div
         style={{
           display: "flex",
