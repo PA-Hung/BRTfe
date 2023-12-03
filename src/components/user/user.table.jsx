@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
-import { Table, Button, notification, Popconfirm, message } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Button,
+  notification,
+  Popconfirm,
+  message,
+  Form,
+  Input,
+} from "antd";
+import queryString from "query-string";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import CreateUserModal from "./create.user.modal";
 import UpdateUserModal from "./update.user.modal";
 import { deleteUser, getUsers } from "../../utils/api";
@@ -23,9 +32,9 @@ const UserTable = () => {
   }, [meta.current, meta.pageSize]);
 
   const getData = async () => {
+    const query = buildQuery();
     setLoading(true);
-
-    const res = await getUsers(meta.current, meta.pageSize);
+    const res = await getUsers(query);
     if (res.data) {
       setListUsers(res.data.result);
       setMeta({
@@ -40,7 +49,6 @@ const UserTable = () => {
         description: res.message,
       });
     }
-
     setLoading(false);
   };
 
@@ -119,6 +127,68 @@ const UserTable = () => {
     });
   };
 
+  const [form] = Form.useForm();
+
+  const buildQuery = (
+    params,
+    sort,
+    filter,
+    page = meta.current,
+    pageSize = meta.pageSize
+  ) => {
+    const clone = { ...params };
+    if (clone.phone) clone.phone = `/${clone.phone}/i`;
+    if (clone.name) clone.name = `/${clone.name}/i`;
+
+    let temp = queryString.stringify(clone);
+
+    let sortBy = "";
+    if (sort && sort.phone) {
+      sortBy = sort.phone === "ascend" ? "sort=phone" : "sort=-phone";
+    }
+    if (sort && sort.name) {
+      sortBy = sort.name === "ascend" ? "sort=name" : "sort=-name";
+    }
+
+    if (sort && sort.createdAt) {
+      sortBy =
+        sort.createdAt === "ascend" ? "sort=createdAt" : "sort=-createdAt";
+    }
+    if (sort && sort.updatedAt) {
+      sortBy =
+        sort.updatedAt === "ascend" ? "sort=updatedAt" : "sort=-updatedAt";
+    }
+
+    //mặc định sort theo updatedAt
+    if (Object.keys(sortBy).length === 0) {
+      temp = `current=${page}&pageSize=${pageSize}&${temp}&sort=-updatedAt`;
+    } else {
+      temp = `current=${page}&pageSize=${pageSize}&${temp}&${sortBy}`;
+    }
+    return temp;
+  };
+
+  const onSearch = async (value) => {
+    const query = buildQuery(value);
+    setLoading(true);
+    const res = await getUsers(query);
+    if (res.data) {
+      setListUsers(res.data.result);
+      setMeta({
+        current: res.data.meta.current,
+        pageSize: res.data.meta.pageSize,
+        pages: res.data.meta.pages,
+        total: res.data.meta.total,
+      });
+    } else {
+      notification.error({
+        message: "Có lỗi xảy ra",
+        description: res.message,
+      });
+    }
+    setLoading(false);
+  };
+
   return (
     <div style={{ paddingLeft: 30, paddingRight: 30 }}>
       <div
@@ -126,10 +196,32 @@ const UserTable = () => {
           color: "black",
           display: "flex",
           alignItems: "center",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           padding: 20,
         }}
       >
+        <div>
+          <Form
+            name="search-form"
+            onFinish={onSearch}
+            layout="inline"
+            form={form}
+          >
+            <Form.Item label="Số điện thoại" name="phone">
+              <Input placeholder="Nhập số điện thoại" />
+            </Form.Item>
+            <Form.Item label="Tên" name="name">
+              <Input placeholder="Nhập tên" />
+            </Form.Item>
+            <Button
+              icon={<SearchOutlined />}
+              type={"primary"}
+              htmlType="submit"
+            >
+              Tìm kiếm
+            </Button>
+          </Form>
+        </div>
         <div>
           <Button
             icon={<PlusOutlined />}

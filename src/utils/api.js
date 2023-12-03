@@ -12,8 +12,10 @@ const updateTaskListByAdmin = (data) => {
 
 // TaskList - By User -----------------------------------------------------------------------------------------
 
-const getAllTaskListByUser = (userid, current, pageSize) => {
-    return axios.get(`api/v1/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
+//const getAllTaskListByUser = (userid, current, pageSize) => {
+//return axios.get(`api/v1/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
+const getAllTaskListByUser = (query) => {
+    return axios.get(`api/v1/tasklist/${query}`)
 }
 
 const postCreateTaskListByUser = (data) => {
@@ -39,8 +41,9 @@ const getAllTaskListWithUserID = (userid, current, pageSize) => {
 
 // User ----------------------------------------------------------------------------------------------------
 
-const getUsers = (current, pageSize) => {
-    return axios.get(`api/v1/users?current=${current}&pageSize=${pageSize}`)
+const getUsers = (query) => {
+    //return axios.get(`api/v1/users?current=${current}&pageSize=${pageSize}`)
+    return axios.get(`api/v1/users?${query}`)
 }
 
 const postCreateUser = (data) => {
