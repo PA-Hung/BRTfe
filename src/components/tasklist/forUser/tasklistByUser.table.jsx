@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Table, Button, notification, Popconfirm, message } from "antd";
+import { Table, Button, notification, Popconfirm } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { getAllTaskListByUser, deleteTaskListByUser } from "../../utils/api";
+import { getAllTaskListByUser, deleteTaskListByUser } from "../../../utils/api";
 import { useSelector } from "react-redux";
 import CreateTaskListByUserModal from "./createTasklistByUser.modal";
 import UpdateTaskListByUserModal from "./updateTasklistByUser.modal";
@@ -18,7 +18,7 @@ const TaskListByUser = () => {
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState({
     current: 1,
-    pageSize: 6,
+    pageSize: 5,
     pages: 0,
     total: 0,
   });
@@ -53,7 +53,9 @@ const TaskListByUser = () => {
     const res = await deleteTaskListByUser(id);
     if (res.data) {
       await getData();
-      message.success("Xoá dữ liệu thành công !");
+      notification.success({
+        message: "Xoá dữ liệu thành công !",
+      });
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
@@ -65,6 +67,7 @@ const TaskListByUser = () => {
   const tasklistColumns = [
     {
       title: "Ngày làm việc",
+      width: "250px",
       dataIndex: "date",
       key: "date",
       render: (_value, record) => {
@@ -80,6 +83,7 @@ const TaskListByUser = () => {
     },
     {
       title: "Thời gian làm việc",
+      width: "200px",
       dataIndex: "period",
       key: "period",
       render: (_value, record) => {
@@ -96,6 +100,7 @@ const TaskListByUser = () => {
     },
     {
       title: "Actions",
+      width: "250px",
       render: (record) => {
         return (
           <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
@@ -144,10 +149,10 @@ const TaskListByUser = () => {
           color: "black",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
+          padding: 20,
         }}
       >
-        <h2>Danh sách đăng ký</h2>
         <div>
           <Button
             icon={<PlusOutlined />}

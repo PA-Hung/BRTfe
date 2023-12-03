@@ -1,15 +1,23 @@
 import React from "react";
-import { Table, notification } from "antd";
+import { Button, Popconfirm, Table, notification } from "antd";
 import { useState, useEffect } from "react";
-import { getAllTaskListByAdmin } from "../../utils/api";
+import {
+  deleteTaskListByAdmin,
+  getAllTaskListWithUserID,
+} from "../../utils/api";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import { useSelector } from "react-redux";
+import UpdateTasklistByAdmin from "./forAdmin/updateTasklistByAdmin.modal";
 dayjs.locale("vi");
 
 const DetailListById = (props) => {
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [updateData, setUpdateData] = useState(null);
   const { userid } = props;
   const [loading, setLoading] = useState(false);
   const [taskList, setTaskList] = useState([]);
+  const role = useSelector((state) => state.auth.user.role);
 
   const [meta, setMeta] = useState({
     current: 1,
@@ -26,7 +34,11 @@ const DetailListById = (props) => {
     setLoading(true);
     const current = meta.current;
     const pageSize = meta.pageSize;
-    const resTasklist = await getAllTaskListByAdmin(userid, current, pageSize);
+    const resTasklist = await getAllTaskListWithUserID(
+      userid,
+      current,
+      pageSize
+    );
     if (resTasklist.data) {
       setTaskList(resTasklist.data.result);
       setMeta({
@@ -45,9 +57,25 @@ const DetailListById = (props) => {
     setLoading(false);
   };
 
+  const confirmDelete = async (id) => {
+    const res = await deleteTaskListByAdmin(id);
+    if (res.data) {
+      await getData();
+      notification.success({
+        message: "Xoá dữ liệu thành công !",
+      });
+    } else {
+      notification.error({
+        message: "Có lỗi xảy ra",
+        description: res.message,
+      });
+    }
+  };
+
   const tasklistColumns = [
     {
       title: "Ngày làm việc",
+      width: "250px",
       dataIndex: "date",
       key: "date",
       render: (_value, record) => {
@@ -63,6 +91,7 @@ const DetailListById = (props) => {
     },
     {
       title: "Thời gian làm việc",
+      width: "200px",
       dataIndex: "period",
       key: "period",
       render: (_value, record) => {
@@ -77,6 +106,44 @@ const DetailListById = (props) => {
         return <div>{record.note}</div>;
       },
     },
+    {
+      title: "Actions",
+      width: "250px",
+      render: (record) => {
+        return (
+          <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
+            <div>
+              <Button
+                disabled={role === "ADMIN" ? false : true}
+                danger
+                onClick={() => {
+                  setIsUpdateModalOpen(true);
+                  setUpdateData(record);
+                }}
+              >
+                Cập nhật
+              </Button>
+            </div>
+            <div>
+              <Popconfirm
+                title={`Bạn muốn xoá dữ liệu này ?`}
+                onConfirm={() => confirmDelete(record._id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  type={"primary"}
+                  danger
+                  disabled={role === "ADMIN" ? false : true}
+                >
+                  Xoá
+                </Button>
+              </Popconfirm>
+            </div>
+          </div>
+        );
+      },
+    },
   ];
 
   const handleOnchangeTable = (page, pageSize) => {
@@ -89,22 +156,31 @@ const DetailListById = (props) => {
   };
 
   return (
-    <Table
-      size="small"
-      dataSource={taskList}
-      columns={tasklistColumns}
-      rowKey={"_id"}
-      loading={loading}
-      bordered={false}
-      pagination={{
-        current: meta.current,
-        pageSize: meta.pageSize,
-        total: meta.total,
-        onChange: (page, pageSize) => handleOnchangeTable(page, pageSize),
-        showSizeChanger: false,
-        defaultPageSize: meta.pageSize,
-      }}
-    />
+    <>
+      <Table
+        size="small"
+        dataSource={taskList}
+        columns={tasklistColumns}
+        rowKey={"_id"}
+        loading={loading}
+        bordered={false}
+        pagination={{
+          current: meta.current,
+          pageSize: meta.pageSize,
+          total: meta.total,
+          onChange: (page, pageSize) => handleOnchangeTable(page, pageSize),
+          showSizeChanger: false,
+          defaultPageSize: meta.pageSize,
+        }}
+      />
+      <UpdateTasklistByAdmin
+        updateData={updateData}
+        getData={getData}
+        isUpdateModalOpen={isUpdateModalOpen}
+        setIsUpdateModalOpen={setIsUpdateModalOpen}
+        setUpdateData={setUpdateData}
+      />
+    </>
   );
 };
 

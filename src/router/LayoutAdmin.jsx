@@ -34,7 +34,30 @@ const LayoutAdmin = (props) => {
   };
 
   const handleMenu = (e) => {
-    dispatch(setActiveKey(e.key));
+    if (e.key === "home") {
+      dispatch(
+        setActiveKey({
+          activeKey: e.key,
+          title: "Bảng đăng ký sản xuất tiền kỳ chuyên mục tuần",
+        })
+      );
+    }
+    if (e.key === "user") {
+      dispatch(
+        setActiveKey({
+          activeKey: e.key,
+          title: "Quản lý phóng viên",
+        })
+      );
+    }
+    if (e.key === "usertasklist") {
+      dispatch(
+        setActiveKey({
+          activeKey: e.key,
+          title: "Danh sách đăng ký",
+        })
+      );
+    }
   };
 
   const handleLogout = async () => {
@@ -54,13 +77,13 @@ const LayoutAdmin = (props) => {
       label: <Link to={"/admin"}>Trang chủ</Link>,
       key: "home",
       icon: <HomeOutlined />,
-      visible: true,
+      visible: "true",
     },
     {
       label: <Link to={"/admin/user"}>Quản lý</Link>,
       key: "user",
       icon: <UserSwitchOutlined />,
-      visible: isAdmin === "ADMIN" ? true : false,
+      visible: isAdmin === "ADMIN" ? "true" : "false",
     },
     // {
     //   label: <Link to={"/admin/tasklist"}>Bảng đăng ký</Link>,
@@ -71,17 +94,17 @@ const LayoutAdmin = (props) => {
       label: <Link to={"/admin/usertasklist"}>Bảng đăng ký</Link>,
       key: "usertasklist",
       icon: <CalendarOutlined />,
-      visible: true,
+      visible: isAdmin === "ADMIN" ? "false" : "true",
     },
     {
       label: <Link onClick={() => handleLogout()}>Đăng xuất</Link>,
       key: "logout",
       icon: <LogoutOutlined />,
-      visible: true,
+      visible: "true",
     },
   ];
 
-  const filteredItems = items.filter((item) => item.visible);
+  const filteredItems = items.filter((item) => item.visible === "true");
 
   return (
     <Layout theme={darkMode ? "dark" : "light"} hasSider>

@@ -1,10 +1,56 @@
 import React from "react";
-import { Layout, Button, Switch } from "antd";
+import { Layout, Button, Dropdown, Space, notification } from "antd";
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { DownOutlined, SettingOutlined } from "@ant-design/icons";
+import { Link, useNavigate } from "react-router-dom";
+import { postLogOut } from "../../utils/api";
+import { setLogoutAction } from "../../redux/slice/authSlice";
+import { setHomeKey } from "../../redux/slice/menuSilce";
 const { Header } = Layout;
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const HeaderAdmin = (props) => {
   const { toggleCollapsed, collapsed } = props;
+  const activeTitle = useSelector((state) => state.menu.title);
+  const loginName = useSelector((state) => state.auth.user.name);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const res = await postLogOut();
+    if (res && res.data) {
+      dispatch(setLogoutAction({}));
+      dispatch(setHomeKey());
+      notification.success({
+        message: "Đăng xuất thành công !",
+      });
+      navigate("/");
+    }
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: (
+        <Link>
+          <SettingOutlined /> Tài khoản của tôi
+        </Link>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <Link onClick={() => handleLogout()}>
+          <LogoutOutlined /> Đăng xuất
+        </Link>
+      ),
+    },
+  ];
+
   return (
     <>
       <Header
@@ -29,12 +75,18 @@ const HeaderAdmin = (props) => {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
         </div>
+        <div>
+          <h2>{activeTitle}</h2>
+        </div>
         <div style={{ paddingBottom: 3 }}>
-          <Switch
-            checkedChildren="Tối"
-            unCheckedChildren="Sáng"
-            defaultChecked={false}
-          />
+          <Dropdown menu={{ items }}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                {loginName}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
         </div>
       </Header>
     </>

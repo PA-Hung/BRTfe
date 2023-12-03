@@ -13,7 +13,7 @@ const UserTable = () => {
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState({
     current: 1,
-    pageSize: 6,
+    pageSize: 5,
     pages: 0,
     total: 0,
   });
@@ -126,10 +126,10 @@ const UserTable = () => {
           color: "black",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
+          padding: 20,
         }}
       >
-        <h2>Quản lý phóng viên</h2>
         <div>
           <Button
             icon={<PlusOutlined />}

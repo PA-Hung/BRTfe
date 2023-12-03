@@ -1,14 +1,16 @@
 import axios from '../utils/axiosCustomize'
 
-// TaskList ------------------------------------------------------------------------------------------------
+// TaskList - By Admin -----------------------------------------------------------------------------------------
 
-const getAllUsersWithTask = (current, pageSize) => {
-    return axios.get(`api/v1/users/tasklist?current=${current}&pageSize=${pageSize}`)
+const deleteTaskListByAdmin = (id) => {
+    return axios.delete(`api/v1/tasklist/admin/${id}`)
 }
 
-const getAllTaskListByAdmin = (userid, current, pageSize) => {
-    return axios.get(`api/v1/users/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
+const updateTaskListByAdmin = (data) => {
+    return axios.patch('api/v1/tasklist/admin', data)
 }
+
+// TaskList - By User -----------------------------------------------------------------------------------------
 
 const getAllTaskListByUser = (userid, current, pageSize) => {
     return axios.get(`api/v1/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
@@ -24,6 +26,15 @@ const deleteTaskListByUser = (id) => {
 
 const updateTaskListByUser = (data) => {
     return axios.patch('api/v1/tasklist', data)
+}
+
+// TaskList Public ------------------------------------------------------------------------------------------------
+const getAllUsersWithTask = (current, pageSize) => {
+    return axios.get(`api/v1/users/tasklist?current=${current}&pageSize=${pageSize}`)
+}
+
+const getAllTaskListWithUserID = (userid, current, pageSize) => {
+    return axios.get(`api/v1/users/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
 }
 
 // User ----------------------------------------------------------------------------------------------------
@@ -60,8 +71,10 @@ const postLogOut = () => {
 
 
 export {
+    deleteTaskListByAdmin,
+    updateTaskListByAdmin,
     getAllUsersWithTask,
-    getAllTaskListByAdmin,
+    getAllTaskListWithUserID,
     getAllTaskListByUser,
     postCreateTaskListByUser,
     deleteTaskListByUser,

@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    activeKey: 'home'
+    activeKey: 'home',
+    title: 'Bảng đăng ký sản xuất tiền kỳ chuyên mục tuần'
 }
 
 export const menuSlice = createSlice({
@@ -9,10 +10,12 @@ export const menuSlice = createSlice({
     initialState,
     reducers: {
         setActiveKey: (state, action) => {
-            state.activeKey = action.payload;
+            state.activeKey = action.payload.activeKey;
+            state.title = action.payload.title
         },
         setHomeKey: (state, action) => {
             state.activeKey = 'home';
+            state.title = 'Bảng đăng ký sản xuất tiền kỳ chuyên mục tuần'
         },
     },
 })

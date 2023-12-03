@@ -35,7 +35,7 @@ const UpdateUserModal = (props) => {
     if (res.data) {
       await getData();
       notification.success({
-        message: "Cập nhật dùng thành công !",
+        message: "Cập nhật người dùng thành công !",
       });
       resetModal();
     } else {

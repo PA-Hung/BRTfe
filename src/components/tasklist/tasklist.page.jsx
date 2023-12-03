@@ -71,17 +71,7 @@ const Tasklist = () => {
   };
 
   return (
-    <div style={{ paddingLeft: 30, paddingRight: 30 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          color: "black",
-        }}
-      >
-        <h2>Bảng đăng ký sản xuất tiền kỳ chuyên mục tuần</h2>
-      </div>
+    <div style={{ paddingLeft: 30, paddingRight: 30, paddingTop: 30 }}>
       <Table
         size="small"
         columns={userColumns}

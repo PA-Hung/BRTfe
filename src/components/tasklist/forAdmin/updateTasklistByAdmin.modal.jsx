@@ -1,26 +1,47 @@
 import { Modal, Input, notification, Form, Select, DatePicker } from "antd";
-import { postCreateTaskListByUser } from "../../utils/api";
+import { updateTaskListByAdmin } from "../../../utils/api";
+import { useEffect } from "react";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+dayjs.locale("vi");
 
-const CreateTaskListByUserModal = (props) => {
-  const { getData, isCreateModalOpen, setIsCreateModalOpen } = props;
+const UpdateTasklistByAdmin = (props) => {
+  const {
+    updateData,
+    isUpdateModalOpen,
+    setIsUpdateModalOpen,
+    getData,
+    setUpdateData,
+  } = props;
   const [form] = Form.useForm();
   const { TextArea } = Input;
-
   const resetModal = () => {
-    setIsCreateModalOpen(false);
+    setIsUpdateModalOpen(false);
+    setUpdateData(null);
     // form.resetFields()
   };
 
+  useEffect(() => {
+    if (updateData) {
+      const momentDate = dayjs(updateData.date).isValid()
+        ? dayjs(updateData.date)
+        : null;
+      form.setFieldsValue({
+        date: momentDate,
+        period: updateData.period,
+        note: updateData.note,
+      });
+    }
+  }, [updateData]);
+
   const onFinish = async (values) => {
-    // const { name, phone, password, role } = values
-    // const data = { name, phone, password, role }
-    //console.log(">>>>>>> check data", values);
-    const data = values; // viết gọn của 2 dòng trên
-    const res = await postCreateTaskListByUser(data);
+    const { date, period, note } = values;
+    const data = { _id: updateData._id, date, period, note };
+    const res = await updateTaskListByAdmin(data);
     if (res.data) {
       await getData();
       notification.success({
-        message: "Đăng ký danh sách thành công !",
+        message: "Cập nhật danh sách thành công !",
       });
       resetModal();
     } else {
@@ -34,15 +55,15 @@ const CreateTaskListByUserModal = (props) => {
   return (
     <>
       <Modal
-        title="Thêm mới lịch làm việc"
-        open={isCreateModalOpen}
+        title="Cập nhật lịch làm việc"
+        open={isUpdateModalOpen}
         onOk={() => form.submit()}
         onCancel={resetModal}
         maskClosable={false}
         width={350}
       >
         <Form
-          name="create-tasklist-byuser"
+          name="update-tasklist-byuser"
           onFinish={onFinish}
           layout="vertical"
           form={form}
@@ -53,7 +74,11 @@ const CreateTaskListByUserModal = (props) => {
               label="Ngày làm việc"
               rules={[{ required: true, message: "Chọn ngày làm việc !" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker
+                disabled
+                style={{ width: "100%" }}
+                format={"DD/MM/YYYY"}
+              />
             </Form.Item>
 
             <Form.Item
@@ -62,6 +87,7 @@ const CreateTaskListByUserModal = (props) => {
               rules={[{ required: true, message: "Chọn thời gian làm việc !" }]}
             >
               <Select
+                disabled
                 placeholder="Chọn buổi làm việc !"
                 allowClear
                 options={[
@@ -89,4 +115,4 @@ const CreateTaskListByUserModal = (props) => {
   );
 };
 
-export default CreateTaskListByUserModal;
+export default UpdateTasklistByAdmin;

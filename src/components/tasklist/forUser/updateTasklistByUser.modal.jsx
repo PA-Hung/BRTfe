@@ -1,5 +1,5 @@
 import { Modal, Input, notification, Form, Select, DatePicker } from "antd";
-import { updateTaskListByUser } from "../../utils/api";
+import { updateTaskListByUser } from "../../../utils/api";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
@@ -75,7 +75,11 @@ const UpdateTaskListByUserModal = (props) => {
               label="Ngày làm việc"
               rules={[{ required: true, message: "Chọn ngày làm việc !" }]}
             >
-              <DatePicker style={{ width: "100%" }} format={"DD/MM/YYYY"} />
+              <DatePicker
+                disabled
+                style={{ width: "100%" }}
+                format={"DD/MM/YYYY"}
+              />
             </Form.Item>
 
             <Form.Item
@@ -84,6 +88,7 @@ const UpdateTaskListByUserModal = (props) => {
               rules={[{ required: true, message: "Chọn thời gian làm việc !" }]}
             >
               <Select
+                disabled
                 placeholder="Chọn buổi làm việc !"
                 allowClear
                 options={[
