@@ -14,11 +14,15 @@ import { combineReducers } from 'redux'
 import authReducer from './slice/authSlice'
 import userReducer from './slice/userSilce'
 import menuReducer from './slice/menuSilce'
+import searchUserReducer from './slice/searchUserSilce'
+import searchTaskReducer from './slice/searchTaskSilce'
 
 const rootReducer = combineReducers({
     auth: authReducer,
     user: userReducer,
-    menu: menuReducer
+    menu: menuReducer,
+    searchUser: searchUserReducer,
+    searchTask: searchTaskReducer,
 })
 
 const persistConfig = {

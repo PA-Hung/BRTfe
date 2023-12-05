@@ -1,13 +1,11 @@
 import React from "react";
 import { Button, Popconfirm, Table, notification } from "antd";
 import { useState, useEffect } from "react";
-import {
-  deleteTaskListByAdmin,
-  getAllTaskListWithUserID,
-} from "../../utils/api";
+import { deleteTaskListByAdmin, getAllTaskListByUser } from "../../utils/api";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import { useSelector } from "react-redux";
+import queryString from "query-string";
 import UpdateTasklistByAdmin from "./forAdmin/updateTasklistByAdmin.modal";
 dayjs.locale("vi");
 
@@ -30,15 +28,54 @@ const DetailListById = (props) => {
     getData();
   }, [meta.current, meta.pageSize]);
 
+  const taskQuery = (
+    params,
+    sort,
+    filter,
+    userId = userid,
+    page = meta.current,
+    pageSize = meta.pageSize
+  ) => {
+    const clone = { ...params };
+
+    if (clone.date) clone.date = dayjs(clone.date).format();
+    if (clone.period) clone.period = `/${clone.period}/i`;
+    if (clone.note) clone.note = `/${clone.note}/i`;
+
+    let temp = queryString.stringify(clone);
+
+    let sortBy = "";
+    if (sort && sort.date) {
+      sortBy = sort.date === "ascend" ? "sort=date" : "sort=-date";
+    }
+    if (sort && sort.period) {
+      sortBy = sort.period === "ascend" ? "sort=period" : "sort=-period";
+    }
+    if (sort && sort.note) {
+      sortBy = sort.note === "ascend" ? "sort=note" : "sort=-note";
+    }
+    if (sort && sort.createdAt) {
+      sortBy =
+        sort.createdAt === "ascend" ? "sort=createdAt" : "sort=-createdAt";
+    }
+    if (sort && sort.updatedAt) {
+      sortBy =
+        sort.updatedAt === "ascend" ? "sort=updatedAt" : "sort=-updatedAt";
+    }
+
+    //mặc định sort theo updatedAt
+    if (Object.keys(sortBy).length === 0) {
+      temp = `${userId}?current=${page}&pageSize=${pageSize}&${temp}&sort=-updatedAt`;
+    } else {
+      temp = `${userId}?current=${page}&pageSize=${pageSize}&${temp}&${sortBy}`;
+    }
+    return temp;
+  };
+
   const getData = async () => {
     setLoading(true);
-    const current = meta.current;
-    const pageSize = meta.pageSize;
-    const resTasklist = await getAllTaskListWithUserID(
-      userid,
-      current,
-      pageSize
-    );
+    const query = taskQuery();
+    const resTasklist = await getAllTaskListByUser(query);
     if (resTasklist.data) {
       setTaskList(resTasklist.data.result);
       setMeta({

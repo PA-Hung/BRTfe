@@ -4,9 +4,8 @@ import { getUsers } from '../../utils/api'
 // First, create the thunk
 export const fetchListUsers = createAsyncThunk(
     'users/fetchListUsers',
-    async (params, thunkAPI) => {
-        const response = await getUsers(params.current, params.pageSize)
-        console.log('xxx', response);
+    async () => {
+        const response = await getUsers()
         return response
     }
 )

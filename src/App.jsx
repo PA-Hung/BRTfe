@@ -35,21 +35,6 @@ function App() {
           <p className="read-the-docs">BRT Home Demo</p>
         </div>
       </div>
-      <h1>Vite + React</h1>
-      <div>
-        <button
-          aria-label="Increment value"
-          onClick={() => dispatch(setUserLoginInfo())}
-        >
-          Increment
-        </button>
-        <button
-          aria-label="Decrement value"
-          onClick={() => dispatch(setLogoutAction())}
-        >
-          Decrement
-        </button>
-      </div>
     </div>
   );
 }

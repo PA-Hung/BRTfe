@@ -12,8 +12,6 @@ const updateTaskListByAdmin = (data) => {
 
 // TaskList - By User -----------------------------------------------------------------------------------------
 
-//const getAllTaskListByUser = (userid, current, pageSize) => {
-//return axios.get(`api/v1/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
 const getAllTaskListByUser = (query) => {
     return axios.get(`api/v1/tasklist/${query}`)
 }
@@ -31,18 +29,14 @@ const updateTaskListByUser = (data) => {
 }
 
 // TaskList Public ------------------------------------------------------------------------------------------------
-const getAllUsersWithTask = (current, pageSize) => {
-    return axios.get(`api/v1/users/tasklist?current=${current}&pageSize=${pageSize}`)
-}
 
-const getAllTaskListWithUserID = (userid, current, pageSize) => {
-    return axios.get(`api/v1/users/tasklist/${userid}?current=${current}&pageSize=${pageSize}`)
+const getAllUsersWithTask = (query) => {
+    return axios.get(`api/v1/users/tasklist?${query}`)
 }
 
 // User ----------------------------------------------------------------------------------------------------
 
 const getUsers = (query) => {
-    //return axios.get(`api/v1/users?current=${current}&pageSize=${pageSize}`)
     return axios.get(`api/v1/users?${query}`)
 }
 
@@ -77,7 +71,6 @@ export {
     deleteTaskListByAdmin,
     updateTaskListByAdmin,
     getAllUsersWithTask,
-    getAllTaskListWithUserID,
     getAllTaskListByUser,
     postCreateTaskListByUser,
     deleteTaskListByUser,

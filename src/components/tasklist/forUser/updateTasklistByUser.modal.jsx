@@ -37,7 +37,6 @@ const UpdateTaskListByUserModal = (props) => {
   const onFinish = async (values) => {
     const { date, period, note } = values;
     const data = { _id: updateData._id, date, period, note };
-    console.log(">>>>>>> check data", data.date);
     const res = await updateTaskListByUser(data);
     if (res.data) {
       await getData();

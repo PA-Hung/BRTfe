@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
-import { Table, notification } from "antd";
-import { getAllUsersWithTask } from "../../utils/api";
+import { useEffect } from "react";
+import { Button, DatePicker, Form, Input, Select, Table } from "antd";
 import DetailListById from "./detailListById.table";
+import { SearchOutlined } from "@ant-design/icons";
+import queryString from "query-string";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserPublic } from "../../redux/slice/searchUserSilce";
 
 const Tasklist = () => {
-  const [listUsers, setListUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [meta, setMeta] = useState({
-    current: 1,
-    pageSize: 14,
-    pages: 0,
-    total: 0,
-  });
+  const dispatch = useDispatch();
+  const listUsers = useSelector((state) => state.searchUser.result);
+  const meta = useSelector((state) => state.searchUser.meta);
+  const isFetching = useSelector((state) => state.searchUser.isFetching);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     getData();
@@ -20,6 +20,16 @@ const Tasklist = () => {
   const userColumns = [
     Table.EXPAND_COLUMN,
     {
+      title: "STT",
+      key: "index",
+      width: 50,
+      align: "center",
+      render: (text, record, index) => {
+        return <>{index + 1 + (meta.current - 1) * meta.pageSize}</>;
+      },
+      hideInSearch: true,
+    },
+    {
       title: "Phóng viên",
       dataIndex: "name",
       key: "name",
@@ -27,7 +37,6 @@ const Tasklist = () => {
         return <div>{record?.name}</div>;
       },
     },
-
     {
       title: "Số điện thoại",
       dataIndex: "phone",
@@ -40,25 +49,8 @@ const Tasklist = () => {
   ];
 
   const getData = async () => {
-    setLoading(true);
-
-    const res = await getAllUsersWithTask(meta.current, meta.pageSize);
-    if (res.data) {
-      setListUsers(res.data.result);
-      setMeta({
-        current: res.data.meta.current,
-        pageSize: res.data.meta.pageSize,
-        pages: res.data.meta.pages,
-        total: res.data.meta.total,
-      });
-    } else {
-      notification.error({
-        message: "Có lỗi xảy ra",
-        description: res.message,
-      });
-    }
-
-    setLoading(false);
+    const query = userQuery();
+    dispatch(fetchUserPublic({ query }));
   };
 
   const handleOnchangeTable = (page, pageSize) => {
@@ -70,38 +62,123 @@ const Tasklist = () => {
     });
   };
 
+  const userQuery = (
+    params,
+    sort,
+    filter,
+    page = meta.current,
+    pageSize = meta.pageSize
+  ) => {
+    const clone = { ...params };
+
+    if (clone.name) clone.name = `/${clone.name}/i`;
+
+    let temp = queryString.stringify(clone);
+
+    let sortBy = "";
+    if (sort && sort.date) {
+      sortBy = sort.name === "ascend" ? "sort=name" : "sort=-name";
+    }
+    if (sort && sort.createdAt) {
+      sortBy =
+        sort.createdAt === "ascend" ? "sort=createdAt" : "sort=-createdAt";
+    }
+    if (sort && sort.updatedAt) {
+      sortBy =
+        sort.updatedAt === "ascend" ? "sort=updatedAt" : "sort=-updatedAt";
+    }
+
+    //mặc định sort theo updatedAt
+    if (Object.keys(sortBy).length === 0) {
+      temp = `current=${page}&pageSize=${pageSize}&${temp}&sort=-updatedAt`;
+    } else {
+      temp = `current=${page}&pageSize=${pageSize}&${temp}&${sortBy}`;
+    }
+    return temp;
+  };
+
+  const onSearch = async (value) => {
+    const query = userQuery(value);
+    dispatch(fetchUserPublic({ query }));
+  };
+
   return (
-    <div style={{ paddingLeft: 30, paddingRight: 30, paddingTop: 30 }}>
-      <Table
-        size="small"
-        columns={userColumns}
-        dataSource={listUsers}
-        rowKey={"_id"}
-        loading={loading}
-        bordered={true}
-        expandable={{
-          expandedRowRender: (record) => {
-            return (
-              <div>
-                <DetailListById userid={record._id} />
-              </div>
-            );
-          },
-          //columnTitle: 'Mở rộng',
-        }}
-        scroll={{ x: true, y: 450, scrollToFirstRowOnChange: true }}
-        pagination={{
-          current: meta.current,
-          pageSize: meta.pageSize,
-          total: meta.total,
-          showTotal: (total, range) =>
-            `${range[0]} - ${range[1]} of ${total} items`,
-          onChange: (page, pageSize) => handleOnchangeTable(page, pageSize),
-          showSizeChanger: true,
-          defaultPageSize: meta.pageSize,
-        }}
-      />{" "}
-      {/*  // dataSource phải là mảng Array [] */}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 30,
+      }}
+    >
+      <div>
+        <Form
+          name="search-form"
+          onFinish={onSearch}
+          layout="inline"
+          form={form}
+        >
+          <Form.Item label="Tên" name="name">
+            <Input placeholder="Nhập tên phóng viên" />
+          </Form.Item>
+          <Form.Item name="date" label="Ngày làm việc">
+            <DatePicker
+              style={{ width: "100%" }}
+              placeholder="Chọn ngày"
+              format={"DD/MM/YYYY"}
+            />
+          </Form.Item>
+          <Form.Item name="period" label="Thời gian">
+            <Select
+              placeholder="Chọn buổi làm việc"
+              allowClear
+              options={[
+                { value: "SÁNG", label: "SÁNG" },
+                { value: "CHIỀU", label: "CHIỀU" },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item label="Ghi chú" name="note">
+            <Input placeholder="Nhập ghi chú của bạn ..." />
+          </Form.Item>
+          <Button icon={<SearchOutlined />} type={"primary"} htmlType="submit">
+            Tìm kiếm
+          </Button>
+        </Form>
+      </div>
+      <div style={{ paddingLeft: 30, paddingRight: 30, paddingTop: 30 }}>
+        <Table
+          size="small"
+          columns={userColumns}
+          dataSource={listUsers}
+          rowKey={"_id"}
+          loading={isFetching}
+          bordered={true}
+          expandable={{
+            expandedRowRender: (record) => {
+              return (
+                <div>
+                  <DetailListById userid={record._id} />
+                </div>
+              );
+            },
+            //columnTitle: 'Mở rộng',
+          }}
+          scroll={{ x: true, y: 450, scrollToFirstRowOnChange: true }}
+          pagination={{
+            current: meta.current,
+            pageSize: meta.pageSize,
+            total: meta.total,
+            showTotal: (total, range) =>
+              `${range[0]} - ${range[1]} of ${total} items`,
+            onChange: (page, pageSize) => handleOnchangeTable(page, pageSize),
+            showSizeChanger: true,
+            defaultPageSize: meta.pageSize,
+          }}
+        />{" "}
+        {/*  // dataSource phải là mảng Array [] */}
+      </div>
     </div>
   );
 };
