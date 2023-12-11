@@ -7,13 +7,13 @@ import {
   LogoutOutlined,
   CalendarOutlined,
 } from "@ant-design/icons";
-import Logo from "../components/admin/logo.jsx";
-import ToggleThemeButton from "../components/admin/toggleTheme.jsx";
-import { postLogOut } from "../utils/api.js";
+import Logo from "@/components/admin/logo.jsx";
+import ToggleThemeButton from "@/components/admin/toggleTheme.jsx";
+import { postLogOut } from "@/utils/api.js";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogoutAction } from "../redux/slice/authSlice.js";
-import HeaderAdmin from "../components/admin/header.jsx";
-import { setActiveKey, setHomeKey } from "../redux/slice/menuSilce.js";
+import { setLogoutAction } from "@/redux/slice/authSlice.js";
+import HeaderAdmin from "@/components/admin/header.jsx";
+import { setActiveKey, setHomeKey } from "@/redux/slice/menuSilce.js";
 
 const { Footer, Sider, Content } = Layout;
 
