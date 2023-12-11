@@ -70,15 +70,19 @@ const Tasklist = () => {
     pageSize = meta.pageSize
   ) => {
     const clone = { ...params };
-
+    if (clone.phone) clone.phone = `/${clone.phone}/i`;
     if (clone.name) clone.name = `/${clone.name}/i`;
 
     let temp = queryString.stringify(clone);
 
     let sortBy = "";
-    if (sort && sort.date) {
+    if (sort && sort.phone) {
+      sortBy = sort.phone === "ascend" ? "sort=phone" : "sort=-phone";
+    }
+    if (sort && sort.name) {
       sortBy = sort.name === "ascend" ? "sort=name" : "sort=-name";
     }
+
     if (sort && sort.createdAt) {
       sortBy =
         sort.createdAt === "ascend" ? "sort=createdAt" : "sort=-createdAt";
@@ -122,25 +126,8 @@ const Tasklist = () => {
           <Form.Item label="Tên" name="name">
             <Input placeholder="Nhập tên phóng viên" />
           </Form.Item>
-          <Form.Item name="date" label="Ngày làm việc">
-            <DatePicker
-              style={{ width: "100%" }}
-              placeholder="Chọn ngày"
-              format={"DD/MM/YYYY"}
-            />
-          </Form.Item>
-          <Form.Item name="period" label="Thời gian">
-            <Select
-              placeholder="Chọn buổi làm việc"
-              allowClear
-              options={[
-                { value: "SÁNG", label: "SÁNG" },
-                { value: "CHIỀU", label: "CHIỀU" },
-              ]}
-            />
-          </Form.Item>
-          <Form.Item label="Ghi chú" name="note">
-            <Input placeholder="Nhập ghi chú của bạn ..." />
+          <Form.Item label="Số điện thoại" name="phone">
+            <Input placeholder="Nhập số điện thoại" />
           </Form.Item>
           <Button icon={<SearchOutlined />} type={"primary"} htmlType="submit">
             Tìm kiếm

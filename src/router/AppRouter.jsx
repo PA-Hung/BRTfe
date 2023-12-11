@@ -1,7 +1,6 @@
 import App from "../App";
 import { createBrowserRouter } from "react-router-dom";
 import LayoutAdmin from "./LayoutAdmin";
-import AdminPage from "../components/admin/admin.page";
 import UserPage from "../components/user/user.page";
 import ProtectedRoute from "./protectedRoute";
 import Tasklist from "../components/tasklist/tasklist.page";
