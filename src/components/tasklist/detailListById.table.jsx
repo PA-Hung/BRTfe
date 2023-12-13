@@ -65,7 +65,7 @@ const DetailListById = (props) => {
 
     //mặc định sort theo updatedAt
     if (Object.keys(sortBy).length === 0) {
-      temp = `${userId}?current=${page}&pageSize=${pageSize}&${temp}&sort=-updatedAt`;
+      temp = `${userId}?current=${page}&pageSize=${pageSize}&${temp}&sort=-date`;
     } else {
       temp = `${userId}?current=${page}&pageSize=${pageSize}&${temp}&${sortBy}`;
     }
@@ -136,7 +136,23 @@ const DetailListById = (props) => {
       },
     },
     {
-      title: "Ghi chú",
+      title: "Quay phim",
+      dataIndex: "camera",
+      key: "camera",
+      render: (_value, record) => {
+        return <div>{record.note}</div>;
+      },
+    },
+    {
+      title: "Địa điểm",
+      dataIndex: "location",
+      key: "location",
+      render: (_value, record) => {
+        return <div>{record.location}</div>;
+      },
+    },
+    {
+      title: "Nội dung công việc",
       dataIndex: "note",
       key: "note",
       render: (_value, record) => {

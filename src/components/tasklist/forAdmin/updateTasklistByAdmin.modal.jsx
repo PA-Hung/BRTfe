@@ -18,7 +18,7 @@ const UpdateTasklistByAdmin = (props) => {
   const resetModal = () => {
     setIsUpdateModalOpen(false);
     setUpdateData(null);
-    // form.resetFields()
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -29,14 +29,15 @@ const UpdateTasklistByAdmin = (props) => {
       form.setFieldsValue({
         date: momentDate,
         period: updateData.period,
+        location: updateData.location,
         note: updateData.note,
       });
     }
   }, [updateData]);
 
   const onFinish = async (values) => {
-    const { date, period, note } = values;
-    const data = { _id: updateData._id, date, period, note };
+    const { date, period, location, note } = values;
+    const data = { _id: updateData._id, date, period, location, note };
     const res = await updateTaskListByAdmin(data);
     if (res.data) {
       await getData();
@@ -96,11 +97,18 @@ const UpdateTasklistByAdmin = (props) => {
                 ]}
               />
             </Form.Item>
+            <Form.Item
+              name="location"
+              label="Địa điểm"
+              rules={[{ required: false, message: "Nhập địa điểm tác nghiệp" }]}
+            >
+              <Input />
+            </Form.Item>
 
             <Form.Item
-              label="Ghi chú"
+              label="Nội dung công việc"
               name="note"
-              rules={[{ required: true, message: "Nhập ghi chú của bạn !" }]}
+              rules={[{ required: true, message: "Nhập nội dung công việc !" }]}
             >
               <TextArea
                 showCount

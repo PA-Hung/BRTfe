@@ -71,8 +71,32 @@ const CreateTaskListByUserModal = (props) => {
               />
             </Form.Item>
 
+            {/* <Form.Item
+              name="camera"
+              label="Quay phim"
+              rules={[{ required: true, message: "Chọn quay phim !" }]}
+            >
+              <Select
+                placeholder="Chọn quay phim !"
+                allowClear
+                mode="multiple"
+                options={[
+                  { value: "Hiếu Thuận", label: "Hiếu Thuận" },
+                  { value: "Đức Thuận", label: "Đức Thuận" },
+                ]}
+              />
+            </Form.Item> */}
+
             <Form.Item
-              label="Ghi chú"
+              name="location"
+              label="Địa điểm"
+              rules={[{ required: false, message: "Nhập địa điểm tác nghiệp" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Nội dung công việc"
               name="note"
               rules={[{ required: true, message: "Nhập ghi chú của bạn !" }]}
             >
