@@ -113,12 +113,13 @@ const LayoutAdmin = (props) => {
         collapsible
         collapsed={collapsed}
         theme={darkMode ? "dark" : "light"}
+        mode="inline"
       >
         <Logo />
         <Menu
           onClick={handleMenu}
           style={{ height: "calc(100vh - 60px)" }}
-          mode="inline"
+          mode="vertical"
           theme={darkMode ? "dark" : "light"}
           items={filteredItems}
           defaultSelectedKeys={["home"]}

@@ -7,6 +7,8 @@ const instance = axios.create({
     withCredentials: true
 });
 
+
+
 const mutex = new Mutex();
 const NO_RETRY_HEADER = 'x-no-retry';
 
@@ -18,7 +20,6 @@ const handleRefreshToken = async () => {
         else return null;
     });
 };
-
 // Thêm một bộ đón chặn request
 instance.interceptors.request.use(function (config) {
     // Làm gì đó trước khi request dược gửi đi

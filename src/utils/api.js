@@ -1,4 +1,17 @@
 import axios from '../utils/axiosCustomize'
+// Notification - By Admin 
+const postCreateNoti = (data) => {
+    return axios.post('api/v1/notification', data)
+}
+
+const getNoti = () => {
+    return axios.get(`api/v1/notification`)
+}
+
+const deleteNoti = () => {
+    return axios.delete(`api/v1/notification`)
+}
+
 
 // TaskList - By Admin -----------------------------------------------------------------------------------------
 
@@ -68,6 +81,9 @@ const postLogOut = () => {
 
 
 export {
+    deleteNoti,
+    getNoti,
+    postCreateNoti,
     deleteTaskListByAdmin,
     updateTaskListByAdmin,
     getAllUsersWithTask,

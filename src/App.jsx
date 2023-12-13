@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BrtLogo from "./assets/brt.png";
-import "./styles/App.css";
+import "./styles/app.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchAccount,

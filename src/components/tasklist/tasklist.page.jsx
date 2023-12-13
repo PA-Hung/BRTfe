@@ -5,6 +5,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import queryString from "query-string";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserPublic } from "../../redux/slice/searchUserSilce";
+import AdminPage from "../admin/admin.page";
 
 const Tasklist = () => {
   const dispatch = useDispatch();
@@ -107,16 +108,17 @@ const Tasklist = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 30,
-      }}
-    >
-      <div>
+    <div>
+      <AdminPage />
+      <div
+        style={{
+          color: "black",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 20,
+        }}
+      >
         <Form
           name="search-form"
           onFinish={onSearch}
