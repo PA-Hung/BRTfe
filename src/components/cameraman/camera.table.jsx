@@ -4,26 +4,20 @@ import {
   Button,
   notification,
   Popconfirm,
+  message,
   Form,
   Input,
-  DatePicker,
-  Select,
 } from "antd";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { getAllTaskListByUser, deleteTaskListByUser } from "../../../utils/api";
-import { useSelector } from "react-redux";
-import CreateTaskListByUserModal from "./createTasklistByUser.modal";
-import UpdateTaskListByUserModal from "./updateTasklistByUser.modal";
 import queryString from "query-string";
-import dayjs from "dayjs";
-import "dayjs/locale/vi";
-dayjs.locale("vi");
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import { deleteCameraMan, getCameraMan } from "../../utils/api";
+import CreateCameraModal from "./create.camera.modal";
+import UpdateCameraModal from "./update.camera.modal";
 
-const TaskListByUser = () => {
+const CameraTable = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [tasklists, setTaskLists] = useState([]);
-  const user = useSelector((state) => state.auth.user);
+  const [listCameraMan, setListCameraMan] = useState([]);
   const [updateData, setUpdateData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [meta, setMeta] = useState({
@@ -33,21 +27,19 @@ const TaskListByUser = () => {
     total: 0,
   });
 
-  const [form] = Form.useForm();
-
   useEffect(() => {
     getData();
   }, [meta.current, meta.pageSize]);
 
   const getData = async () => {
-    setLoading(true);
     const query = buildQuery();
-    const res = await getAllTaskListByUser(query);
+    setLoading(true);
+    const res = await getCameraMan(query);
     if (res.data) {
-      setTaskLists(res.data.result);
+      setListCameraMan(res.data.result);
       setMeta({
-        current: res.data.meta.current,
-        pageSize: res.data.meta.pageSize,
+        current: res?.data?.meta?.current,
+        pageSize: res?.data?.meta?.pageSize,
         pages: res.data.meta.pages,
         total: res.data.meta.total,
       });
@@ -57,17 +49,14 @@ const TaskListByUser = () => {
         description: res.message,
       });
     }
-
     setLoading(false);
   };
 
-  const confirmDelete = async (id) => {
-    const res = await deleteTaskListByUser(id);
+  const confirmDelete = async (user) => {
+    const res = await deleteCameraMan(user._id);
     if (res.data) {
       await getData();
-      notification.success({
-        message: "Xoá dữ liệu thành công !",
-      });
+      message.success("Xoá quay phim thành công !");
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
@@ -76,60 +65,29 @@ const TaskListByUser = () => {
     }
   };
 
-  const tasklistColumns = [
+  const columns = [
     {
-      title: "Ngày làm việc",
-      width: "250px",
-      dataIndex: "date",
-      key: "date",
-      render: (_value, record) => {
-        const rawDate = dayjs(record.date).format("dddd");
-        const date = rawDate.charAt(0).toUpperCase() + rawDate.slice(1);
-        return (
-          <div style={{ display: "flex", gap: "4px" }}>
-            <div>{date}</div>
-            <div>{dayjs(record.date).format(", [ngày] DD/MM/YYYY")}</div>
-          </div>
-        );
+      title: "STT",
+      key: "index",
+      width: 50,
+      align: "center",
+      render: (text, record, index) => {
+        return <>{index + 1 + (meta.current - 1) * meta.pageSize}</>;
       },
+      hideInSearch: true,
     },
     {
-      title: "Thời gian",
-      width: "200px",
-      dataIndex: "period",
-      key: "period",
-      render: (_value, record) => {
-        return <div>{record.period}</div>;
-      },
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "Quay phim",
-      dataIndex: "camera",
-      key: "camera",
-      render: (_value, record) => {
-        const cameramanString = record.cameraman.join(", ");
-        return <div>{cameramanString}</div>;
-      },
-    },
-    {
-      title: "Địa điểm",
-      dataIndex: "location",
-      key: "location",
-      render: (_value, record) => {
-        return <div>{record.location}</div>;
-      },
-    },
-    {
-      title: "Công việc",
-      dataIndex: "note",
-      key: "note",
-      render: (_value, record) => {
-        return <div>{record.note}</div>;
-      },
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
       title: "Actions",
-      width: "250px",
       render: (record) => {
         return (
           <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
@@ -146,8 +104,8 @@ const TaskListByUser = () => {
             </div>
             <div>
               <Popconfirm
-                title={`Bạn muốn xoá dữ liệu này ?`}
-                onConfirm={() => confirmDelete(record._id)}
+                title={`Bạn muốn xoá ${record.name} không ?`}
+                onConfirm={() => confirmDelete(record)}
                 okText="Yes"
                 cancelText="No"
               >
@@ -171,32 +129,29 @@ const TaskListByUser = () => {
     });
   };
 
+  const [form] = Form.useForm();
+
   const buildQuery = (
     params,
     sort,
     filter,
-    userId = user._id,
     page = meta.current,
     pageSize = meta.pageSize
   ) => {
     const clone = { ...params };
-
-    if (clone.date) clone.date = dayjs(clone.date).format();
-    if (clone.period) clone.period = `/${clone.period}/i`;
-    if (clone.note) clone.note = `/${clone.note}/i`;
+    if (clone.phone) clone.phone = `/${clone.phone}/i`;
+    if (clone.name) clone.name = `/${clone.name}/i`;
 
     let temp = queryString.stringify(clone);
 
     let sortBy = "";
-    if (sort && sort.date) {
-      sortBy = sort.date === "ascend" ? "sort=date" : "sort=-date";
+    if (sort && sort.phone) {
+      sortBy = sort.phone === "ascend" ? "sort=phone" : "sort=-phone";
     }
-    if (sort && sort.period) {
-      sortBy = sort.period === "ascend" ? "sort=period" : "sort=-period";
+    if (sort && sort.name) {
+      sortBy = sort.name === "ascend" ? "sort=name" : "sort=-name";
     }
-    if (sort && sort.note) {
-      sortBy = sort.note === "ascend" ? "sort=note" : "sort=-note";
-    }
+
     if (sort && sort.createdAt) {
       sortBy =
         sort.createdAt === "ascend" ? "sort=createdAt" : "sort=-createdAt";
@@ -208,19 +163,19 @@ const TaskListByUser = () => {
 
     //mặc định sort theo updatedAt
     if (Object.keys(sortBy).length === 0) {
-      temp = `${userId}?current=${page}&pageSize=${pageSize}&${temp}&sort=-date`;
+      temp = `current=${page}&pageSize=${pageSize}&${temp}&sort=-updatedAt`;
     } else {
-      temp = `${userId}?current=${page}&pageSize=${pageSize}&${temp}&${sortBy}`;
+      temp = `current=${page}&pageSize=${pageSize}&${temp}&${sortBy}`;
     }
     return temp;
   };
 
-  const onSearch = async (values) => {
-    const query = buildQuery(values);
+  const onSearch = async (value) => {
+    const query = buildQuery(value);
     setLoading(true);
-    const res = await getAllTaskListByUser(query);
+    const res = await getCameraMan(query);
     if (res.data) {
-      setTaskLists(res.data.result);
+      setListCameraMan(res.data.result);
       setMeta({
         current: res.data.meta.current,
         pageSize: res.data.meta.pageSize,
@@ -242,7 +197,6 @@ const TaskListByUser = () => {
         style={{
           color: "black",
           display: "flex",
-          flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
           padding: 20,
@@ -255,34 +209,19 @@ const TaskListByUser = () => {
             layout="inline"
             form={form}
           >
-            <Form.Item name="date" label="Ngày làm việc">
-              <DatePicker
-                style={{ width: "100%" }}
-                placeholder="Chọn ngày"
-                format={"DD/MM/YYYY"}
-              />
+            <Form.Item label="Tên" name="name">
+              <Input placeholder="Nhập tên quay phim" />
             </Form.Item>
-            <Form.Item name="period" label="Thời gian">
-              <Select
-                placeholder="Chọn buổi làm việc"
-                allowClear
-                options={[
-                  { value: "SÁNG", label: "SÁNG" },
-                  { value: "CHIỀU", label: "CHIỀU" },
-                ]}
-              />
-            </Form.Item>
-            {/* <Form.Item label="Địa điểm" name="location">
-              <Input placeholder="Nhập địa điểm ..." />
-            </Form.Item> */}
-            <Form.Item label="Công việc" name="note">
-              <Input placeholder="Nhập công việc của bạn ..." />
+            <Form.Item label="Số điện thoại" name="phone">
+              <Input placeholder="Nhập số điện thoại" />
             </Form.Item>
             <Button
               icon={<SearchOutlined />}
               type={"primary"}
               htmlType="submit"
-            />
+            >
+              Tìm kiếm
+            </Button>
           </Form>
         </div>
         <div>
@@ -297,8 +236,8 @@ const TaskListByUser = () => {
       </div>
       <Table
         size="small"
-        columns={tasklistColumns}
-        dataSource={tasklists}
+        columns={columns}
+        dataSource={listCameraMan}
         rowKey={"_id"}
         loading={loading}
         bordered={true}
@@ -314,12 +253,12 @@ const TaskListByUser = () => {
         }}
       />{" "}
       {/*  // dataSource phải là mảng Array [] */}
-      <CreateTaskListByUserModal
+      <CreateCameraModal
         getData={getData}
         isCreateModalOpen={isCreateModalOpen}
         setIsCreateModalOpen={setIsCreateModalOpen}
       />
-      <UpdateTaskListByUserModal
+      <UpdateCameraModal
         updateData={updateData}
         getData={getData}
         isUpdateModalOpen={isUpdateModalOpen}
@@ -330,4 +269,4 @@ const TaskListByUser = () => {
   );
 };
 
-export default TaskListByUser;
+export default CameraTable;

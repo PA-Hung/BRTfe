@@ -6,6 +6,7 @@ import {
   UserSwitchOutlined,
   LogoutOutlined,
   CalendarOutlined,
+  VideoCameraAddOutlined,
 } from "@ant-design/icons";
 import Logo from "@/components/admin/logo.jsx";
 import ToggleThemeButton from "@/components/admin/toggleTheme.jsx";
@@ -50,6 +51,14 @@ const LayoutAdmin = (props) => {
         })
       );
     }
+    if (e.key === "cameraman") {
+      dispatch(
+        setActiveKey({
+          activeKey: e.key,
+          title: "Quản lý quay phim",
+        })
+      );
+    }
     if (e.key === "usertasklist") {
       dispatch(
         setActiveKey({
@@ -80,16 +89,17 @@ const LayoutAdmin = (props) => {
       visible: "true",
     },
     {
-      label: <Link to={"/admin/user"}>Quản lý</Link>,
+      label: <Link to={"/admin/user"}>Quản lý phóng viên</Link>,
       key: "user",
       icon: <UserSwitchOutlined />,
       visible: isAdmin === "ADMIN" ? "true" : "false",
     },
-    // {
-    //   label: <Link to={"/admin/tasklist"}>Bảng đăng ký</Link>,
-    //   key: "tasklist",
-    //   icon: <CalendarOutlined />,
-    // },
+    {
+      label: <Link to={"/admin/cameraman"}>Quản lý quay phim</Link>,
+      key: "cameraman",
+      icon: <VideoCameraAddOutlined />,
+      visible: isAdmin === "ADMIN" ? "true" : "false",
+    },
     {
       label: <Link to={"/admin/usertasklist"}>Bảng đăng ký</Link>,
       key: "usertasklist",
@@ -107,13 +117,18 @@ const LayoutAdmin = (props) => {
   const filteredItems = items.filter((item) => item.visible === "true");
 
   return (
-    <Layout theme={darkMode ? "dark" : "light"} hasSider>
+    <Layout
+      theme={darkMode ? "dark" : "light"}
+      hasSider
+      style={{ minHeight: "100vh", backgroundColor: "white" }}
+    >
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
         theme={darkMode ? "dark" : "light"}
         mode="inline"
+        style={{ minHeight: "100vh", backgroundColor: "white" }}
       >
         <Logo />
         <Menu
@@ -130,9 +145,7 @@ const LayoutAdmin = (props) => {
       <Layout>
         <HeaderAdmin toggleCollapsed={toggleCollapsed} collapsed={collapsed} />
         <Content>
-          <div
-            style={{ backgroundColor: "white", height: "calc(100vh - 60px)" }}
-          >
+          <div style={{ backgroundColor: "white", height: "100vh" }}>
             <Outlet />
           </div>
         </Content>

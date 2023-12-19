@@ -1,21 +1,47 @@
 import { Modal, Input, notification, Form, Select, DatePicker } from "antd";
-import { postCreateTaskListByUser } from "../../../utils/api";
+import { getCameraMan, postCreateTaskListByUser } from "../../../utils/api";
+import { useEffect, useState } from "react";
+import _ from "lodash";
 
 const CreateTaskListByUserModal = (props) => {
   const { getData, isCreateModalOpen, setIsCreateModalOpen } = props;
   const [form] = Form.useForm();
   const { TextArea } = Input;
+  const [listCamera, setListCamera] = useState([]);
 
   const resetModal = () => {
     setIsCreateModalOpen(false);
-    // form.resetFields()
+    form.resetFields();
   };
 
+  const convertDataSelect = (data) => {
+    return _(data)
+      .groupBy((x) => x.name)
+      .map((value, key) => {
+        // Assuming 'name' is the property you want to use
+        const name = key; // 'key' now represents the 'name' from the grouped data
+        //const _id = value[0]._id;
+        return {
+          //_id: _id,
+          value: name,
+          label: name,
+        };
+      })
+      .value();
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      const res = await getCameraMan(`current=1&pageSize=100`);
+      if (res.data?.result) {
+        setListCamera(convertDataSelect(res.data?.result));
+      }
+    };
+    init();
+  }, []);
+
   const onFinish = async (values) => {
-    // const { name, phone, password, role } = values
-    // const data = { name, phone, password, role }
-    //console.log(">>>>>>> check data", values);
-    const data = values; // viết gọn của 2 dòng trên
+    const data = values;
     const res = await postCreateTaskListByUser(data);
     if (res.data) {
       await getData();
@@ -71,8 +97,8 @@ const CreateTaskListByUserModal = (props) => {
               />
             </Form.Item>
 
-            {/* <Form.Item
-              name="camera"
+            <Form.Item
+              name="cameraman"
               label="Quay phim"
               rules={[{ required: true, message: "Chọn quay phim !" }]}
             >
@@ -80,12 +106,9 @@ const CreateTaskListByUserModal = (props) => {
                 placeholder="Chọn quay phim !"
                 allowClear
                 mode="multiple"
-                options={[
-                  { value: "Hiếu Thuận", label: "Hiếu Thuận" },
-                  { value: "Đức Thuận", label: "Đức Thuận" },
-                ]}
+                options={listCamera}
               />
-            </Form.Item> */}
+            </Form.Item>
 
             <Form.Item
               name="location"

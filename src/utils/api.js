@@ -1,4 +1,21 @@
 import axios from '../utils/axiosCustomize'
+// Camera man - By Admin 
+const postCreateCameraMan = (data) => {
+    return axios.post('api/v1/cameraman', data)
+}
+
+const getCameraMan = (query) => {
+    return axios.get(`api/v1/cameraman?${query}`)
+}
+
+const deleteCameraMan = (id) => {
+    return axios.delete(`api/v1/cameraman/${id}`)
+}
+
+const updateCameraMan = (data) => {
+    return axios.patch('api/v1/cameraman', data)
+}
+
 // Notification - By Admin 
 const postCreateNoti = (data) => {
     return axios.post('api/v1/notification', data)
@@ -81,6 +98,10 @@ const postLogOut = () => {
 
 
 export {
+    updateCameraMan,
+    deleteCameraMan,
+    postCreateCameraMan,
+    getCameraMan,
     deleteNoti,
     getNoti,
     postCreateNoti,

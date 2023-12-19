@@ -67,17 +67,27 @@ const UserTable = () => {
 
   const columns = [
     {
+      title: "STT",
+      key: "index",
+      width: 50,
+      align: "center",
+      render: (text, record, index) => {
+        return <>{index + 1 + (meta.current - 1) * meta.pageSize}</>;
+      },
+      hideInSearch: true,
+    },
+    {
+      title: "Tên",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
       title: "Số điện thoại",
       dataIndex: "phone",
       key: "phone",
       render: (_value, record) => {
         return <div>{record.phone}</div>;
       },
-    },
-    {
-      title: "Tên",
-      dataIndex: "name",
-      key: "name",
     },
     {
       title: "Quyền hạn",

@@ -6,6 +6,7 @@ import ProtectedRoute from "@/router/protectedRoute";
 import Tasklist from "@/components/tasklist/tasklist.page";
 import Login from "@/components/auth/login.page";
 import TaskListByUser from "@/components/tasklist/forUser/tasklistByUser.table";
+import CameraPage from "../components/cameraman/camera.page";
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: "user",
         element: <UserPage />,
+      },
+            {
+        path: "cameraman",
+        element: <CameraPage />,
       },
       {
         path: "usertasklist",

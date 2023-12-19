@@ -19,7 +19,7 @@ const DetailListById = (props) => {
 
   const [meta, setMeta] = useState({
     current: 1,
-    pageSize: 5,
+    pageSize: 14,
     pages: 0,
     total: 0,
   });
@@ -112,7 +112,7 @@ const DetailListById = (props) => {
   const tasklistColumns = [
     {
       title: "Ngày làm việc",
-      width: "250px",
+      //width: "250px",
       dataIndex: "date",
       key: "date",
       render: (_value, record) => {
@@ -127,8 +127,8 @@ const DetailListById = (props) => {
       },
     },
     {
-      title: "Thời gian làm việc",
-      width: "200px",
+      title: "Thời gian",
+      //width: "200px",
       dataIndex: "period",
       key: "period",
       render: (_value, record) => {
@@ -140,7 +140,8 @@ const DetailListById = (props) => {
       dataIndex: "camera",
       key: "camera",
       render: (_value, record) => {
-        return <div>{record.note}</div>;
+        const cameramanString = record.cameraman.join(", ");
+        return <div>{cameramanString}</div>;
       },
     },
     {
@@ -152,7 +153,7 @@ const DetailListById = (props) => {
       },
     },
     {
-      title: "Nội dung công việc",
+      title: "Công việc",
       dataIndex: "note",
       key: "note",
       render: (_value, record) => {
@@ -161,7 +162,7 @@ const DetailListById = (props) => {
     },
     {
       title: "Actions",
-      width: "250px",
+      //width: "250px",
       render: (record) => {
         return (
           <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
