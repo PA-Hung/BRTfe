@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { Layout, Button, Menu, notification } from "antd";
+import { Layout, Button, Menu, notification, theme } from "antd";
 import {
   HomeOutlined,
   UserSwitchOutlined,
@@ -25,6 +25,9 @@ const LayoutAdmin = (props) => {
   const navigate = useNavigate();
   const isAdmin = useSelector((state) => state.auth.user.role);
   const activeMenu = useSelector((state) => state.menu.activeKey);
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -120,7 +123,7 @@ const LayoutAdmin = (props) => {
     <Layout
       theme={darkMode ? "dark" : "light"}
       hasSider
-      style={{ minHeight: "100vh", backgroundColor: "white" }}
+      style={{ minHeight: "100vh" }}
     >
       <Sider
         trigger={null}
@@ -128,28 +131,56 @@ const LayoutAdmin = (props) => {
         collapsed={collapsed}
         theme={darkMode ? "dark" : "light"}
         mode="inline"
-        style={{ minHeight: "100vh", backgroundColor: "white" }}
+        style={{
+          overflow: "hidden",
+          height: "100vh",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          bottom: 0,
+        }}
       >
-        <Logo />
-        <Menu
-          onClick={handleMenu}
-          style={{ height: "calc(100vh - 60px)" }}
-          mode="vertical"
-          theme={darkMode ? "dark" : "light"}
-          items={filteredItems}
-          defaultSelectedKeys={["home"]}
-          selectedKeys={activeMenu}
-        />
-        <ToggleThemeButton darkTheme={darkMode} toggleTheme={toggleTheme} />
+        <div>
+          <Logo />
+          <Menu
+            onClick={handleMenu}
+            style={{ height: "100%" }}
+            mode="vertical"
+            theme={darkMode ? "dark" : "light"}
+            items={filteredItems}
+            defaultSelectedKeys={["home"]}
+            selectedKeys={activeMenu}
+          />
+          <ToggleThemeButton darkTheme={darkMode} toggleTheme={toggleTheme} />
+        </div>
       </Sider>
-      <Layout>
-        <HeaderAdmin toggleCollapsed={toggleCollapsed} collapsed={collapsed} />
-        <Content>
-          <div style={{ backgroundColor: "white", height: "100vh" }}>
+      <Layout
+        theme={darkMode ? "dark" : "light"}
+        style={{ marginLeft: collapsed ? "80px" : "200px" }}
+      >
+        <HeaderAdmin
+          toggleCollapsed={toggleCollapsed}
+          collapsed={collapsed}
+          darkMode={darkMode}
+        />
+        <Content
+          style={{
+            margin: "10px",
+          }}
+        >
+          <div
+            style={{
+              minHeight: "100%",
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
             <Outlet />
           </div>
         </Content>
-        {/* <Footer style={{ backgroundColor: 'white', height: '50px' }}>Footer</Footer> */}
+        <Footer style={{ height: "20px", textAlign: "center" }}>
+          BRT APP ©2023 Created by Phan Anh Hùng
+        </Footer>
       </Layout>
     </Layout>
   );

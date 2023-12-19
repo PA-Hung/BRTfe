@@ -14,7 +14,7 @@ import { setHomeKey } from "../../redux/slice/menuSilce";
 const { Header } = Layout;
 
 const HeaderAdmin = (props) => {
-  const { toggleCollapsed, collapsed } = props;
+  const { toggleCollapsed, collapsed, darkMode } = props;
   const activeTitle = useSelector((state) => state.menu.title);
   const loginName = useSelector((state) => state.auth.user.name);
   const dispatch = useDispatch();
@@ -58,24 +58,31 @@ const HeaderAdmin = (props) => {
           display: "flex",
           flexDirection: "row",
           height: 50,
-          backgroundColor: "white",
           paddingLeft: 5,
           paddingRight: 20,
           justifyContent: "space-between",
           alignItems: "center",
           borderBottom: "1px solid #f0f0f0",
+          backgroundColor: darkMode ? "" : "white",
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
         }}
       >
         <div style={{ paddingTop: 2 }}>
           <Button
             onClick={toggleCollapsed}
             type="text"
-            style={{ fontSize: 15 }}
+            style={{ fontSize: 15, color: darkMode ? "white" : "" }}
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
         </div>
-        <div>
+        <div
+          style={{
+            color: darkMode ? "white" : "",
+          }}
+        >
           <h2>{activeTitle}</h2>
         </div>
         <div style={{ paddingBottom: 3 }}>
