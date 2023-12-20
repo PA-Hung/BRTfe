@@ -24,7 +24,7 @@ const Login = () => {
   const onFinish = async (values) => {
     const res = await postLogin(values.username, values.password);
     if (res?.data) {
-      notification.success({ message: "Đăng nhập tài khoản thành công!" });
+      // notification.success({ message: "Đăng nhập tài khoản thành công!" });
       dispatch(setUserLoginInfo(res.data.user));
       localStorage.setItem("access_token", res.data.access_token);
       window.location.href = callback ? callback : "/admin";

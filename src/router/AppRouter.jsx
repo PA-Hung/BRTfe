@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
         path: "user",
         element: <UserPage />,
       },
-            {
+      {
         path: "cameraman",
         element: <CameraPage />,
       },

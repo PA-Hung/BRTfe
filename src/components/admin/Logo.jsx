@@ -1,14 +1,15 @@
+import { useSelector } from "react-redux";
 import BrtLogo from "../../assets/brt.png";
 
 const Logo = () => {
+  const themeMode = useSelector((state) => state.theme.themeMode);
   return (
     <div
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        // borderRight: "1px solid #f0f0f0",
-        // borderBottom: "1px solid #f0f0f0",
+        backgroundColor: themeMode === "light" ? "white" : "#141414",
       }}
     >
       <div style={{ padding: "10px" }}>

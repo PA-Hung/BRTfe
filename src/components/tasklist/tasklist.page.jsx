@@ -154,7 +154,7 @@ const Tasklist = () => {
             },
             //columnTitle: 'Mở rộng',
           }}
-          scroll={{ x: true, y: 450, scrollToFirstRowOnChange: true }}
+          //scroll={{ x: true, y: 450, scrollToFirstRowOnChange: true }}
           pagination={{
             current: meta.current,
             pageSize: meta.pageSize,

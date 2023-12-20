@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Button, Dropdown, Space, notification } from "antd";
+import { Layout, Dropdown, Space, notification } from "antd";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -14,9 +14,11 @@ import { setHomeKey } from "../../redux/slice/menuSilce";
 const { Header } = Layout;
 
 const HeaderAdmin = (props) => {
-  const { toggleCollapsed, collapsed, darkMode } = props;
+  const { toggleCollapsed, collapsed } = props;
   const activeTitle = useSelector((state) => state.menu.title);
   const loginName = useSelector((state) => state.auth.user.name);
+  const themeMode = useSelector((state) => state.theme.themeMode);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -25,9 +27,9 @@ const HeaderAdmin = (props) => {
     if (res && res.data) {
       dispatch(setLogoutAction({}));
       dispatch(setHomeKey());
-      notification.success({
-        message: "Đăng xuất thành công !",
-      });
+      // notification.success({
+      //   message: "Đăng xuất thành công !",
+      // });
       navigate("/");
     }
   };
@@ -62,25 +64,29 @@ const HeaderAdmin = (props) => {
           paddingRight: 20,
           justifyContent: "space-between",
           alignItems: "center",
-          borderBottom: "1px solid #f0f0f0",
-          backgroundColor: darkMode ? "" : "white",
+          backgroundColor: themeMode === "light" ? "white" : "#141414",
           position: "sticky",
           top: 0,
           zIndex: 1,
+          borderBottom: themeMode === "dark" ? "1px solid #313131" : "",
         }}
       >
-        <div style={{ paddingTop: 2 }}>
-          <Button
-            onClick={toggleCollapsed}
-            type="text"
-            style={{ fontSize: 15, color: darkMode ? "white" : "" }}
-          >
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </Button>
+        <div
+          style={{
+            paddingLeft: 5,
+            fontSize: 15,
+            color: themeMode === "light" ? "black" : "white",
+          }}
+        >
+          {collapsed ? (
+            <MenuUnfoldOutlined onClick={toggleCollapsed} />
+          ) : (
+            <MenuFoldOutlined onClick={toggleCollapsed} />
+          )}
         </div>
         <div
           style={{
-            color: darkMode ? "white" : "",
+            color: themeMode === "light" ? "black" : "white",
           }}
         >
           <h2>{activeTitle}</h2>

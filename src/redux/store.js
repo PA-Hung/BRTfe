@@ -16,11 +16,13 @@ import userReducer from './slice/userSilce'
 import menuReducer from './slice/menuSilce'
 import searchUserReducer from './slice/searchUserSilce'
 import searchTaskReducer from './slice/searchTaskSilce'
+import themeReducer from './slice/themeSilce'
 
 const rootReducer = combineReducers({
     auth: authReducer,
     user: userReducer,
     menu: menuReducer,
+    theme: themeReducer,
     searchUser: searchUserReducer,
     searchTask: searchTaskReducer,
 })

@@ -32,7 +32,7 @@ function App() {
           <div className="card">
             <button onClick={() => navigate("/login")}>Login</button>
           </div>
-          <p className="read-the-docs">BRT Home Demo</p>
+          <p className="read-the-docs">BRT Home</p>
         </div>
       </div>
     </div>
