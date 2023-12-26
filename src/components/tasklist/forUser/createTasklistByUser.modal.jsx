@@ -1,4 +1,12 @@
-import { Modal, Input, notification, Form, Select, DatePicker } from "antd";
+import {
+  Modal,
+  Input,
+  notification,
+  Form,
+  Select,
+  DatePicker,
+  message,
+} from "antd";
 import { getCameraMan, postCreateTaskListByUser } from "../../../utils/api";
 import { useEffect, useState } from "react";
 import _ from "lodash";
@@ -45,9 +53,7 @@ const CreateTaskListByUserModal = (props) => {
     const res = await postCreateTaskListByUser(data);
     if (res.data) {
       await getData();
-      notification.success({
-        message: "Đăng ký danh sách thành công !",
-      });
+      message.success("Đăng ký danh sách thành công !");
       resetModal();
     } else {
       notification.error({
@@ -79,7 +85,7 @@ const CreateTaskListByUserModal = (props) => {
               label="Ngày làm việc"
               rules={[{ required: true, message: "Chọn ngày làm việc !" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} format={"DD/MM/YYYY"} />
             </Form.Item>
 
             <Form.Item

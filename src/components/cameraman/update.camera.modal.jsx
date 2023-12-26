@@ -1,5 +1,13 @@
 import { useEffect } from "react";
-import { Modal, Input, notification, Form, Select, InputNumber } from "antd";
+import {
+  Modal,
+  Input,
+  notification,
+  Form,
+  Select,
+  InputNumber,
+  message,
+} from "antd";
 import { updateCameraMan } from "../../utils/api";
 
 const UpdateCameraModal = (props) => {
@@ -32,13 +40,12 @@ const UpdateCameraModal = (props) => {
     const res = await updateCameraMan(data);
     if (res.data) {
       await getData();
-      notification.success({
-        message: "Cập nhật quay phim thành công !",
-      });
+      message.success("Cập nhật quay phim thành công !");
       resetModal();
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
+        placement: "top",
         description: res.message,
       });
     }
@@ -47,7 +54,7 @@ const UpdateCameraModal = (props) => {
   const resetModal = () => {
     setIsUpdateModalOpen(false);
     setUpdateData(null);
-    //form.resetFields()
+    form.resetFields();
   };
 
   return (
@@ -77,9 +84,7 @@ const UpdateCameraModal = (props) => {
             <Form.Item
               label="Số điện thoại"
               name="phone"
-              rules={[
-                { required: true, message: "Nhập số điện thoại !" },
-              ]}
+              rules={[{ required: true, message: "Nhập số điện thoại !" }]}
             >
               <Input />
             </Form.Item>

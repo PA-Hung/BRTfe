@@ -1,4 +1,12 @@
-import { Modal, Input, notification, Form, Select, DatePicker } from "antd";
+import {
+  Modal,
+  Input,
+  notification,
+  Form,
+  Select,
+  DatePicker,
+  message,
+} from "antd";
 import { getCameraMan, updateTaskListByAdmin } from "../../../utils/api";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -71,15 +79,14 @@ const UpdateTasklistByAdmin = (props) => {
       date,
       period,
       location,
+      userId: updateData.userId,
       note,
       cameraman,
     };
     const res = await updateTaskListByAdmin(data);
     if (res.data) {
       await getData();
-      notification.success({
-        message: "Cập nhật thành công !",
-      });
+      message.success("Cập nhật thành công !");
       resetModal();
     } else {
       notification.error({
@@ -111,7 +118,11 @@ const UpdateTasklistByAdmin = (props) => {
               label="Ngày làm việc"
               rules={[{ required: true, message: "Chọn ngày làm việc !" }]}
             >
-              <DatePicker style={{ width: "100%" }} format={"DD/MM/YYYY"} />
+              <DatePicker
+                disabled
+                style={{ width: "100%" }}
+                format={"DD/MM/YYYY"}
+              />
             </Form.Item>
 
             <Form.Item
@@ -120,6 +131,7 @@ const UpdateTasklistByAdmin = (props) => {
               rules={[{ required: true, message: "Chọn thời gian làm việc !" }]}
             >
               <Select
+                disabled
                 placeholder="Chọn buổi làm việc !"
                 allowClear
                 options={[

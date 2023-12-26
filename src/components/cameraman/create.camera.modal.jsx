@@ -1,4 +1,4 @@
-import { Modal, Input, notification, Form, Select } from "antd";
+import { Modal, Input, notification, Form, message } from "antd";
 import { postCreateCameraMan } from "../../utils/api";
 
 const CreateCameraModal = (props) => {
@@ -7,7 +7,7 @@ const CreateCameraModal = (props) => {
 
   const resetModal = () => {
     setIsCreateModalOpen(false);
-    // form.resetFields()
+    form.resetFields();
   };
 
   const onFinish = async (values) => {
@@ -17,13 +17,12 @@ const CreateCameraModal = (props) => {
     const res = await postCreateCameraMan(data);
     if (res.data) {
       await getData();
-      notification.success({
-        message: "Tạo mới quay phim thành công !",
-      });
+      message.success("Tạo mới quay phim thành công !");
       resetModal();
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
+        placement: "top",
         description: res.message,
       });
     }
@@ -56,9 +55,7 @@ const CreateCameraModal = (props) => {
             <Form.Item
               label="Số điện thoại"
               name="phone"
-              rules={[
-                { required: true, message: "Nhập số điện thoại !" },
-              ]}
+              rules={[{ required: true, message: "Nhập số điện thoại !" }]}
             >
               <Input />
             </Form.Item>

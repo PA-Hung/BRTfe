@@ -39,10 +39,12 @@ const AdminPage = () => {
       await getData();
       notification.success({
         message: "Xoá thông báo thành công !",
+        placement: "top",
       });
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
+        placement: "top",
         description: res.message,
       });
     }

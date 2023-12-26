@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Modal, Input, notification, Form, Select, InputNumber } from "antd";
+import { Modal, Input, notification, Form, Select, message } from "antd";
 import { updateUser } from "../../utils/api";
 
 const UpdateUserModal = (props) => {
@@ -34,13 +34,12 @@ const UpdateUserModal = (props) => {
     const res = await updateUser(data);
     if (res.data) {
       await getData();
-      notification.success({
-        message: "Cập nhật người dùng thành công !",
-      });
+      message.success("Cập nhật người dùng thành công !");
       resetModal();
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
+        placement: "top",
         description: res.message,
       });
     }
@@ -49,7 +48,7 @@ const UpdateUserModal = (props) => {
   const resetModal = () => {
     setIsUpdateModalOpen(false);
     setUpdateData(null);
-    //form.resetFields()
+    form.resetFields();
   };
 
   return (
@@ -76,7 +75,9 @@ const UpdateUserModal = (props) => {
               }}
               label="Phone"
               name="phone"
-              rules={[{ required: true, message: "Please input your phone!" }]}
+              rules={[
+                { required: true, message: "Bạn phải nhập số điện thoại !" },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -89,7 +90,9 @@ const UpdateUserModal = (props) => {
               }}
               label="Name"
               name="name"
-              rules={[{ required: true, message: "Please input your name!" }]}
+              rules={[
+                { required: true, message: "Bạn phải nhập tên người dùng !" },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -107,7 +110,7 @@ const UpdateUserModal = (props) => {
               rules={[
                 {
                   required: updateData ? false : true,
-                  message: "Please input your password!",
+                  message: "Bạn phải nhập mật khẩu !",
                 },
               ]}
             >

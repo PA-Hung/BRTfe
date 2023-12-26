@@ -1,4 +1,4 @@
-import { Modal, Input, notification, Form, Select } from "antd";
+import { Modal, Input, notification, Form, Select, message } from "antd";
 import { postCreateUser } from "../../utils/api";
 
 const CreateUserModal = (props) => {
@@ -7,7 +7,7 @@ const CreateUserModal = (props) => {
 
   const resetModal = () => {
     setIsCreateModalOpen(false);
-    // form.resetFields()
+    form.resetFields();
   };
 
   const onFinish = async (values) => {
@@ -17,9 +17,7 @@ const CreateUserModal = (props) => {
     const res = await postCreateUser(data);
     if (res.data) {
       await getData();
-      notification.success({
-        message: "Tạo mới người dùng thành công !",
-      });
+      message.success("Tạo mới người dùng thành công !");
       resetModal();
     } else {
       notification.error({

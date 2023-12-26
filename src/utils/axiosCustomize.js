@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setRefreshTokenAction } from "../redux/slice/authSlice";
+import { store } from '../redux/store'
 import { Mutex } from "async-mutex";
 
 const instance = axios.create({
@@ -63,7 +64,6 @@ instance.interceptors.response.use(
         ) {
             const message = error?.response?.data?.message ?? "Có lỗi xảy ra, vui lòng login.";
             //dispatch redux action
-            const { store } = await import("../redux/store");
             store.dispatch(setRefreshTokenAction({ status: true, message }));
         }
 

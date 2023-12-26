@@ -90,7 +90,6 @@ const DetailListById = (props) => {
         description: resTasklist.message,
       });
     }
-
     setLoading(false);
   };
 

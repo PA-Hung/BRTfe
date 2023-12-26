@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLogoutAction } from "@/redux/slice/authSlice.js";
 import HeaderAdmin from "@/components/admin/header.jsx";
 import { setActiveKey, setHomeKey } from "@/redux/slice/menuSilce.js";
-import { setDarkTheme } from "../redux/slice/themeSilce";
+import { setThemeMode } from "../redux/slice/themeSilce";
 
 const { Footer, Sider, Content } = Layout;
 
@@ -39,9 +39,9 @@ const LayoutAdmin = (props) => {
 
   const toggleTheme = () => {
     if (themeMode === "light") {
-      dispatch(setDarkTheme("dark"));
+      dispatch(setThemeMode("dark"));
     } else {
-      dispatch(setDarkTheme("light"));
+      dispatch(setThemeMode("light"));
     }
   };
 
@@ -85,9 +85,9 @@ const LayoutAdmin = (props) => {
     if (res && res.data) {
       dispatch(setLogoutAction({}));
       dispatch(setHomeKey());
-      // notification.success({
-      //   message: "Đăng xuất thành công !",
-      // });
+      notification.success({
+        message: "Đăng xuất thành công !",
+      });
       navigate("/");
     }
   };
@@ -179,7 +179,7 @@ const LayoutAdmin = (props) => {
               <Outlet />
             </div>
           </Content>
-          <Footer style={{ height: "20px", textAlign: "center" }}>
+          <Footer style={{ textAlign: "center" }}>
             BRT APP ©2023 Created by Phan Anh Hùng
           </Footer>
         </Layout>

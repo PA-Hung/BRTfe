@@ -46,6 +46,7 @@ const CameraTable = () => {
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
+        placement: "top",
         description: res.message,
       });
     }
@@ -60,6 +61,7 @@ const CameraTable = () => {
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
+        placement: "top",
         description: res.message,
       });
     }

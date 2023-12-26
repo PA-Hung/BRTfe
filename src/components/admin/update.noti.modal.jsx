@@ -11,7 +11,7 @@ const UpdateNotiModal = (props) => {
 
   const resetModal = () => {
     setIsUpdateModalOpen(false);
-    // form.resetFields()
+    form.resetFields();
   };
 
   const onFinish = async () => {
@@ -21,11 +21,13 @@ const UpdateNotiModal = (props) => {
       await getData();
       notification.success({
         message: "Cập nhật báo thành công !",
+        placement: "top",
       });
       resetModal();
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
+        placement: "top",
         description: res.message,
       });
     }

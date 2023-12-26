@@ -27,18 +27,26 @@ const HeaderAdmin = (props) => {
     if (res && res.data) {
       dispatch(setLogoutAction({}));
       dispatch(setHomeKey());
-      // notification.success({
-      //   message: "Đăng xuất thành công !",
-      // });
+      notification.success({
+        message: "Đăng xuất thành công !",
+        placement: "top",
+      });
       navigate("/");
     }
+  };
+
+  const handleUserInfo = () => {
+    notification.success({
+      message: "Chức năng đang được phát triển !",
+      placement: "top",
+    });
   };
 
   const items = [
     {
       key: "1",
       label: (
-        <Link>
+        <Link onClick={() => handleUserInfo()}>
           <SettingOutlined /> Tài khoản của tôi
         </Link>
       ),

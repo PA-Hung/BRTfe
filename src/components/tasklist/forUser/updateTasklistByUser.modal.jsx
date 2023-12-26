@@ -1,4 +1,12 @@
-import { Modal, Input, notification, Form, Select, DatePicker } from "antd";
+import {
+  Modal,
+  Input,
+  notification,
+  Form,
+  Select,
+  DatePicker,
+  message,
+} from "antd";
 import { getCameraMan, updateTaskListByUser } from "../../../utils/api";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
@@ -20,7 +28,7 @@ const UpdateTaskListByUserModal = (props) => {
   const resetModal = () => {
     setIsUpdateModalOpen(false);
     setUpdateData(null);
-    // form.resetFields()
+    form.resetFields();
   };
 
   useEffect(() => {
@@ -77,13 +85,12 @@ const UpdateTaskListByUserModal = (props) => {
     const res = await updateTaskListByUser(data);
     if (res.data) {
       await getData();
-      notification.success({
-        message: "Cập nhật danh sách thành công !",
-      });
+      message.success("Cập nhật danh sách thành công !");
       resetModal();
     } else {
       notification.error({
         message: "Có lỗi xảy ra",
+        placement: "top",
         description: res.message,
       });
     }
@@ -111,7 +118,11 @@ const UpdateTaskListByUserModal = (props) => {
               label="Ngày làm việc"
               rules={[{ required: true, message: "Chọn ngày làm việc !" }]}
             >
-              <DatePicker style={{ width: "100%" }} format={"DD/MM/YYYY"} />
+              <DatePicker
+                disabled
+                style={{ width: "100%" }}
+                format={"DD/MM/YYYY"}
+              />
             </Form.Item>
 
             <Form.Item
@@ -120,6 +131,7 @@ const UpdateTaskListByUserModal = (props) => {
               rules={[{ required: true, message: "Chọn thời gian làm việc !" }]}
             >
               <Select
+                disabled
                 placeholder="Chọn buổi làm việc !"
                 allowClear
                 options={[
